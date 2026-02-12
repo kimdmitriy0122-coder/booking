@@ -1,17 +1,15 @@
 package com.example.j_booking.entity;
 
-import com.example.j_booking.constants.BuildingType;
+import com.example.j_booking.constants.RoomCapacity;
+import com.example.j_booking.constants.RoomClass;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,30 +19,30 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Entity
-@Table(name = "hotels")
+@Table(name = "rooms")
 @Getter
 @Setter
 @SuperBuilder
 @RequiredArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Hotel {
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String name;
-    @OneToOne
-    Address address;
+
+    @ManyToOne
+    Hotel hotel;
+
+    @Column(name = "room_class")
     @Enumerated(EnumType.STRING)
-    BuildingType buildingType;
-    @Column(name = "check_in")
-    LocalDate checkInDate;
-    @Column(name = "check_out")
-    LocalDate checkOutDate;
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
-    List<Room> rooms;
+    RoomClass roomClass;
+
+    @Column(name = "room_capacity")
+    @Enumerated(EnumType.STRING)
+    RoomCapacity roomCapacity;
+
+    Double price;
+
 }
