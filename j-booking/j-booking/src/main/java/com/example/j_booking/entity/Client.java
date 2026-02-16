@@ -17,8 +17,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "clients")
 @Getter
 @Setter
-@SuperBuilder
-@RequiredArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Client {

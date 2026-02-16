@@ -1,3 +1,8 @@
 spring:
   application:
     name: j-booking
+  flyway:
+    schemas: booking
+    locations: classpath:db/migration
+    baseline-on-migrate: true # Базовый уровень, если база не пуста
+    #spring.flyway.clean-disabled=false   # временно для dev

@@ -1,9 +1,23 @@
+version: '3.8'
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+  db:
+    image: postgres:16-alpine # Используем легкий и актуальный образ PostgreSQL
+    container_name: j_booking # Порт для доступа к базе данных
+    # 5432 — стандартный порт PostgreSQL
     ports:
-      - '5432'
+      - "5432:5432"
+    environment:
+    # --- Обязательные учетные данные и имя БД ---
+    # Замените эти значения на ваши:
+      POSTGRES_DB: "postgres" # Имя базы данных, которая будет создана
+      POSTGRES_USER: "postgres" # Имя суперпользователя
+      POSTGRES_PASSWORD: "postgres" # Пароль для суперпользователя # Отключение ведения журнала (для тестовых сред)
+      # PGDATA: /var/lib/postgresql/data/pgdata # Сохранение данных в томе (для постоянства)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Политика перезапуска
+    restart: always
+
+    # Объявление внешнего тома для сохранения данных
+volumes:
+  postgres_data:

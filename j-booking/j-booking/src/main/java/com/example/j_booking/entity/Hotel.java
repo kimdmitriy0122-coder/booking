@@ -1,6 +1,7 @@
 package com.example.j_booking.entity;
 
 import com.example.j_booking.constants.BuildingType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,22 +31,22 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-@RequiredArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     String name;
-    @OneToOne
-    Address address;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     BuildingType buildingType;
-    @Column(name = "check_in")
-    LocalDate checkInDate;
-    @Column(name = "check_out")
-    LocalDate checkOutDate;
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
-    List<Room> rooms;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    private List<Room> rooms;
 }
