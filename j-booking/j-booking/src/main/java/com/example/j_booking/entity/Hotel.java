@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "hotels")
+@Table(name = "hotels", schema = "booking")
 @Getter
 @Setter
 @SuperBuilder
@@ -47,6 +47,6 @@ public class Hotel {
     @Enumerated(EnumType.STRING)
     BuildingType buildingType;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> rooms;
 }

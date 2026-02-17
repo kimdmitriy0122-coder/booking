@@ -2,6 +2,7 @@ package com.example.j_booking.controller;
 
 import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
+import com.example.j_booking.entity.Room;
 import com.example.j_booking.service.HotelBookingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class HotelBookingController {
 //    }
     @PostMapping("/bookRoomWithDates")
     public ResponseEntity<HotelBookingResponse> getRoomWithDates(@RequestBody HotelBookingRequest request) {
-        return service.bookHotelRoomWithDates(request);
+        Room room = service.getRoomById(request);
+        return ResponseEntity.ok(service.bookHotelRoomWithDates(request));
     }
 }

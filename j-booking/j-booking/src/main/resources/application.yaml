@@ -1,6 +1,10 @@
 spring:
   application:
     name: j-booking
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
   flyway:
     schemas: booking
     locations: classpath:db/migration

@@ -8,5 +8,6 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 
 public interface HotelBookingService {
-    ResponseEntity<HotelBookingResponse> bookHotelRoomWithDates(HotelBookingRequest request);
+    Room getRoomById(HotelBookingRequest request);
+    HotelBookingResponse bookHotelRoomWithDates(HotelBookingRequest request);
 }

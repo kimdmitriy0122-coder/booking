@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "clients", schema = "booking")
 @Getter
 @Setter
 @NoArgsConstructor

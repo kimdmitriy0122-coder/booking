@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "booking_records")
+@Table(name = "booking_records", schema = "booking")
 @NoArgsConstructor
 @SuperBuilder
 @Getter
@@ -43,6 +43,4 @@ public class BookingRecord {
 
     @Column(name = "check_out")
     LocalDate checkOut;
-
-
 }

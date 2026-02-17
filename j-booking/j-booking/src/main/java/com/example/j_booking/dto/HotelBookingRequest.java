@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public record HotelBookingRequest(
-    Room room,
+    Long roomId,
     LocalDate checkIn,
     LocalDate checkOut
 ) {}
