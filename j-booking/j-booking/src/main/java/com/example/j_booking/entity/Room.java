@@ -36,9 +36,11 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "hotel_id")
+//    private Hotel hotel;
+    @Column(nullable = false, name = "hotel_id")
+    private Long hotelId;
 
     @Column(name = "room_class")
     @Enumerated(EnumType.STRING)

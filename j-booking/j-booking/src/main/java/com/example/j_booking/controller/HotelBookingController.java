@@ -30,7 +30,7 @@ public class HotelBookingController {
 //    }
     @PostMapping("/bookRoomWithDates")
     public ResponseEntity<HotelBookingResponse> getRoomWithDates(@RequestBody HotelBookingRequest request) {
-        Room room = service.getRoomById(request);
+//        Room room = service.getRoomById(request);
         return ResponseEntity.ok(service.bookHotelRoomWithDates(request));
     }
 }

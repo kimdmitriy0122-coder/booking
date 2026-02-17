@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
+
 @Service
 @RequiredArgsConstructor
 public class HotelBookingServiceImpl implements HotelBookingService {
@@ -20,10 +23,13 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     private final RoomRepository roomRepository;
     private final HotelBookingMapper mapper;
 
-    @Override
-    public Room getRoomById(HotelBookingRequest request) {
-        return null;
+    @Transactional
+    public Room getRoomById(Long id) {
+        return roomRepository
+            .findById(id)
+            .orElseThrow(() -> new NoSuchElementException("No room found with id: " + id));
     }
+
     @Transactional
     @Override
     public HotelBookingResponse bookHotelRoomWithDates(HotelBookingRequest request) {

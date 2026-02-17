@@ -47,6 +47,6 @@ public class Hotel {
     @Enumerated(EnumType.STRING)
     BuildingType buildingType;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hotelId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> rooms;
 }
