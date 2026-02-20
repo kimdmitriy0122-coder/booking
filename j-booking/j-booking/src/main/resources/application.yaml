@@ -10,3 +10,9 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true # Базовый уровень, если база не пуста
     #spring.flyway.clean-disabled=false   # временно для dev
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+    consumer:
+      auto-offset-reset: earliest

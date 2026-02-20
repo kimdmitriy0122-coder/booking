@@ -23,11 +23,15 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     private final RoomRepository roomRepository;
     private final HotelBookingMapper mapper;
 
-    @Transactional
     public Room getRoomById(Long id) {
         return roomRepository
             .findById(id)
             .orElseThrow(() -> new NoSuchElementException("No room found with id: " + id));
+    }
+
+    @Transactional
+    public HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request) {
+        return null;
     }
 
     @Transactional
@@ -45,5 +49,12 @@ public class HotelBookingServiceImpl implements HotelBookingService {
             saved.getCheckOut(),
             RoomStatus.BOOKED
         );
+    }
+
+    @Override
+    public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {
+        BookingRecord record = mapper.toEntity(request);
+        record.setRoom(roomRepository.getReferenceById(request.roomId()));
+        return record;
     }
 }

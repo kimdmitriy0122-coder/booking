@@ -1,12 +1,11 @@
 package com.example.j_booking.dto;
 
-import com.example.j_booking.constants.City;
-import com.example.j_booking.entity.Hotel;
-import com.example.j_booking.entity.Room;
+
+import com.example.j_booking.validation.annotations.CheckoutDateValidationAnnotation;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
+@CheckoutDateValidationAnnotation
 public record HotelBookingRequest(
     Long roomId,
     LocalDate checkIn,

@@ -4,6 +4,7 @@ import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.Room;
 import com.example.j_booking.service.HotelBookingService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,16 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotelBookingController {
     private final HotelBookingService service;
 
-//    @GetMapping("room_available")
-//    public ResponseEntity<RoomAvailableResponse> getRoomAvailability(RoomAvailableRequest request){
-//        RoomAvailableResponse response = service.getRoomAvailability(request);
-//        return ResponseEntity
-//            .ok()
-//            .body(response);
+//    @GetMapping("/isRoomAvailableForDates")
+//    public ResponseEntity<> getRoomAvailability(@Valid @RequestBody HotelBookingRequest request){
+//        service.
+//        return null;
 //    }
     @PostMapping("/bookRoomWithDates")
-    public ResponseEntity<HotelBookingResponse> getRoomWithDates(@RequestBody HotelBookingRequest request) {
+    public ResponseEntity<HotelBookingResponse> bookRoomWithDates(@Valid @RequestBody HotelBookingRequest request) {
 //        Room room = service.getRoomById(request);
+        service.getBookingRecordByRequest(request);
         return ResponseEntity.ok(service.bookHotelRoomWithDates(request));
     }
 }
