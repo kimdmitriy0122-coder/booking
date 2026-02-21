@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CheckoutDateValidation.class)
 public @interface CheckoutDateValidationAnnotation {
-    String message() default "invalid date";
+    String message() default "check out date must be after check in date";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

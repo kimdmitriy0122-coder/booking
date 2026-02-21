@@ -1,7 +1,9 @@
-package com.example.j_booking.exceptions;
-
-public class InvalidCheckoutDate extends RuntimeException {
-    public InvalidCheckoutDate() {
-        super();
-    }
-}
+//package com.example.j_booking.exceptions;
+//
+//import org.springframework.web.bind.MethodArgumentNotValidException;
+//
+//public class InvalidCheckoutDate extends MethodArgumentNotValidException {
+//    public InvalidCheckoutDate() {
+//        super();
+//    }
+//}

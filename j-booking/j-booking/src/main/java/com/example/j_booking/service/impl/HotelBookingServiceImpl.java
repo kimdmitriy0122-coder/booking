@@ -5,6 +5,7 @@ import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Room;
+import com.example.j_booking.exceptions.NoSuchRoomException;
 import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.RoomRepository;
@@ -23,38 +24,36 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     private final RoomRepository roomRepository;
     private final HotelBookingMapper mapper;
 
+    @Override
     public Room getRoomById(Long id) {
         return roomRepository
-            .findById(id)
-            .orElseThrow(() -> new NoSuchElementException("No room found with id: " + id));
+                .findById(id)
+                .orElseThrow(() -> new NoSuchRoomException("No room found with id: " + id));
     }
 
     @Transactional
     public HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request) {
+        BookingRecord record = getBookingRecordByRequest(request);
         return null;
     }
 
-    @Transactional
+
     @Override
-    public HotelBookingResponse bookHotelRoomWithDates(HotelBookingRequest request) {
-
-        BookingRecord record = mapper.toEntity(request);
-        record.setRoom(roomRepository.getReferenceById(request.roomId()));
-
-        BookingRecord saved = bookingRecordRepository.save(record);
-
+    @Transactional
+    public HotelBookingResponse bookHotelRoomWithDates(BookingRecord record) {
+        BookingRecord savedRecord = bookingRecordRepository.save(record);
         return new HotelBookingResponse(
-            saved.getRoom(),
-            saved.getCheckIn(),
-            saved.getCheckOut(),
-            RoomStatus.BOOKED
+                savedRecord.getRoom(),
+                savedRecord.getCheckIn(),
+                savedRecord.getCheckOut(),
+                RoomStatus.BOOKED
         );
     }
 
     @Override
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {
         BookingRecord record = mapper.toEntity(request);
-        record.setRoom(roomRepository.getReferenceById(request.roomId()));
+        record.setRoom(getRoomById(request.roomId()));
         return record;
     }
 }
