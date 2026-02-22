@@ -1,6 +1,6 @@
 package com.example.j_booking.service.impl;
 
-import com.example.j_booking.constants.RoomStatus;
+import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
@@ -11,10 +11,12 @@ import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.HotelBookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 
 @Service
@@ -31,12 +33,17 @@ public class HotelBookingServiceImpl implements HotelBookingService {
                 .orElseThrow(() -> new NoSuchRoomException("No room found with id: " + id));
     }
 
-    @Transactional
+    @Override
     public HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request) {
         BookingRecord record = getBookingRecordByRequest(request);
-        return null;
+        BookingStatus status = checkStatusByRecord(record);
+        return new HotelBookingResponse(
+                record.getRoom(),
+                record.getCheckIn(),
+                record.getCheckOut(),
+                status
+        );
     }
-
 
     @Override
     @Transactional
@@ -46,7 +53,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
                 savedRecord.getRoom(),
                 savedRecord.getCheckIn(),
                 savedRecord.getCheckOut(),
-                RoomStatus.BOOKED
+                BookingStatus.BOOKED
         );
     }
 
@@ -56,4 +63,20 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         record.setRoom(getRoomById(request.roomId()));
         return record;
     }
+
+    private BookingStatus checkStatusByRecord(BookingRecord record) {
+        BookingStatus status = bookingRecordRepository
+                .isRoomFreeByDates(record) ?
+                BookingStatus.BOOKED :
+                BookingStatus.FREE;
+        return status;
+    }
+
+    public Page<Room> getAvailableRooms(HotelBookingRequest request, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return roomRepository.findAvailableRooms(request, pageable);
+
+    }
+
+
 }

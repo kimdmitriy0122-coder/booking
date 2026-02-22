@@ -2,30 +2,18 @@ package com.example.j_booking.entity;
 
 import com.example.j_booking.constants.RoomCapacity;
 import com.example.j_booking.constants.RoomClass;
-import com.example.j_booking.constants.RoomStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "rooms", schema = "booking")
+@Table(name = "rooms", schema = "booking", indexes = {
+        @Index(name = "idx_room_id_unq", columnList = "id", unique = true)
+})
 @Getter
 @Setter
 @SuperBuilder
@@ -36,9 +24,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "hotel_id")
-//    private Hotel hotel;
     @Column(nullable = false, name = "hotel_id")
     private Long hotelId;
 

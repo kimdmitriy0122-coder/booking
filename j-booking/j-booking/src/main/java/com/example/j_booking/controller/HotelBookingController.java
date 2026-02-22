@@ -7,10 +7,7 @@ import com.example.j_booking.service.HotelBookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/booking/")
@@ -18,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotelBookingController {
     private final HotelBookingService service;
 
-//    @GetMapping("/isRoomAvailableForDates")
-//    public ResponseEntity<> getRoomAvailability(@Valid @RequestBody HotelBookingRequest request){
-//        service.
-//        return null;
-//    }
+    @GetMapping("/isRoomAvailableForDates")
+    public ResponseEntity<HotelBookingResponse> getRoomAvailability(@Valid HotelBookingRequest request){
+        HotelBookingResponse response = service.checkRoomAvailabilityWithDates(request);
+        return ResponseEntity.ok(response);
+    }
     @PostMapping("/bookRoomWithDates")
     public ResponseEntity<HotelBookingResponse> bookRoomWithDates(@Valid @RequestBody HotelBookingRequest request) {
-//        Room room = service.getRoomById(request);
         BookingRecord record = service.getBookingRecordByRequest(request);
         return ResponseEntity.ok(service.bookHotelRoomWithDates(record));
     }

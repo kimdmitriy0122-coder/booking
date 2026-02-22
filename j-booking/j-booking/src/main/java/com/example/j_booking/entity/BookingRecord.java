@@ -1,5 +1,6 @@
 package com.example.j_booking.entity;
 
+import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.City;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,4 +45,7 @@ public class BookingRecord {
 
     @Column(name = "check_out")
     LocalDate checkOut;
+
+    @Enumerated(EnumType.STRING)
+    BookingStatus status;
 }

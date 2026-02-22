@@ -9,4 +9,5 @@ public interface HotelBookingService {
     Room getRoomById(Long id);
     BookingRecord getBookingRecordByRequest(HotelBookingRequest request);
     HotelBookingResponse bookHotelRoomWithDates(BookingRecord record);
+    HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request);
 }
