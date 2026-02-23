@@ -24,8 +24,8 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, name = "hotel_id")
-    private Long hotelId;
+    @Column(name = "hotel_id")
+    Long hotelId;
 
     @Column(name = "room_class")
     @Enumerated(EnumType.STRING)

@@ -15,6 +15,5 @@ public interface BookingRecordRepository extends JpaRepository<BookingRecord, Lo
             "AND b.checkIn < :#{#rec.getCheckOut()} " +
             "AND b.checkOut > :#{#rec.getCheckIn()}")
     public boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
-//    public HotelBookingResponse bookHotelWithDate(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
 }

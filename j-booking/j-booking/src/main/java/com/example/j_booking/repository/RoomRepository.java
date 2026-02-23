@@ -1,6 +1,5 @@
 package com.example.j_booking.repository;
 
-import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.entity.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
