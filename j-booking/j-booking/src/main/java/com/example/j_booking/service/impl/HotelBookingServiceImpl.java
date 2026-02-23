@@ -3,6 +3,7 @@ package com.example.j_booking.service.impl;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
+import com.example.j_booking.dto.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Room;
 import com.example.j_booking.exceptions.NoSuchRoomException;
@@ -10,13 +11,13 @@ import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.HotelBookingService;
+import com.example.j_booking.utils.Paginator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 
 @Service
@@ -72,11 +73,13 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         return status;
     }
 
-    public Page<Room> getAvailableRooms(HotelBookingRequest request, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        return roomRepository.findAvailableRooms(request, pageable);
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Room> getAvailableRoomList(LocalDate checkIn, LocalDate checkOut, int page, int size) {
+        var pageable = Paginator.validate(page, size);
 
+        return roomRepository
+            .findAvailableRooms(checkIn, checkOut, pageable)
+            ;
     }
-
-
 }

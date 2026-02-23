@@ -8,18 +8,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+
 public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("""
-        SELECT r FROM Room r 
+        SELECT r FROM Room r
         WHERE NOT EXISTS (
-            SELECT b FROM BookingRecord b 
-            WHERE b.room = r 
+            SELECT b FROM BookingRecord b
+            WHERE b.room = r
             AND b.status <> 'CANCELLED'
-            AND b.checkIn < :#{#req.checkOut} 
-            AND b.checkOut > :#{#req.checkIn}
+            AND b.checkIn < :checkOut
+            AND b.checkOut > :checkIn
         )
     """)
-    Page<Room> findAvailableRooms(@Param("req") HotelBookingRequest req, Pageable pageable);
-
-
+    Page<Room> findAvailableRooms(@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut, Pageable pageable);
 }
