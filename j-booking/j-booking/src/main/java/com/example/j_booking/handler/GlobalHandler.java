@@ -1,7 +1,9 @@
 package com.example.j_booking.handler;
 
+import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.exceptions.ExceptionCode;
 import com.example.j_booking.dto.error.CommonErrorResponse;
+import com.example.j_booking.exceptions.InvalidCheckoutDate;
 import com.example.j_booking.exceptions.NoSuchRoomException;
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.ResponseEntity;
@@ -62,15 +64,13 @@ public class GlobalHandler {
                 ));
     }
 
-//    @ExceptionHandler(UnexpectedTypeException.class)
-//    public ResponseEntity<CommonErrorResponse> handleUnexpectedTypeException(
-//            UnexpectedTypeException exception
-//    ){
-//        return ResponseEntity
-//                .badRequest()
-//                .body(new CommonErrorResponse(
-//                        ExceptionCode.UNEXPECTED_TYPE.getCode(),
-//                        ExceptionCode.UNEXPECTED_TYPE.getMessage() + " " + exception
-//                ));
-//    }
+    @ExceptionHandler(InvalidCheckoutDate.class)
+    public ResponseEntity<CommonErrorResponse> handleInvalidCheckoutDate(){
+        return ResponseEntity
+                .badRequest()
+                .body(new CommonErrorResponse(
+                    ExceptionCode.INVALID_CHECKOUT_DATE.getCode(),
+                    ExceptionCode.INVALID_CHECKOUT_DATE.getMessage()
+                ));
+    }
 }

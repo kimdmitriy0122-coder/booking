@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ExceptionCode {
     NOT_VALID_REQUEST(10000, "check your request"),
     UNEXPECTED_TYPE(10001, "unexpected type"),
-    NO_SUCH_ROOM(10002, "no such room"),;
+    NO_SUCH_ROOM(10002, "no such room"),
+    INVALID_CHECKOUT_DATE(10003, "checkout date invalid. must be after checkin date"),;
 
     int code;
     String message;

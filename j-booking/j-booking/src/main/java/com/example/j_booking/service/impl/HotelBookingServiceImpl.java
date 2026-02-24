@@ -3,7 +3,7 @@ package com.example.j_booking.service.impl;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.dto.HotelBookingRequest;
 import com.example.j_booking.dto.HotelBookingResponse;
-import com.example.j_booking.dto.RoomListResponse;
+import com.example.j_booking.dto.PageableRequest;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
@@ -20,9 +20,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-
 
 @Service
 @RequiredArgsConstructor
@@ -52,14 +49,14 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     @Override
     @Transactional
-    public HotelBookingResponse bookHotelRoomWithDates(BookingRecord record) {
-
+    public HotelBookingResponse bookHotelRoomByRecord(BookingRecord record) {
         BookingRecord savedRecord = bookingRecordRepository.save(record);
         return new HotelBookingResponse(
                 savedRecord.getRoom(),
                 savedRecord.getCheckIn(),
                 savedRecord.getCheckOut(),
-                BookingStatus.BOOKED
+                BookingStatus.BOOKED,
+            "room has been booked"
         );
     }
 
@@ -74,30 +71,30 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     @Transactional(readOnly = true)
     @Override
     public BookingStatus checkStatusByRecord(BookingRecord record) {
-        BookingStatus status = bookingRecordRepository
-                .isRoomFreeByDates(record) ?
-                BookingStatus.BOOKED :
-                BookingStatus.FREE;
-        return status;
+        return bookingRecordRepository
+            .isRoomFreeByDates(record) ?
+            BookingStatus.BOOKED :
+            BookingStatus.FREE;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Room> getAvailableRoomList(LocalDate checkIn, LocalDate checkOut, int page, int size) {
-        var pageable = Paginator.validate(page, size);
-
+    public Page<Room> getAvailableRoomList(PageableRequest request) {
         return roomRepository
-            .findAvailableRooms(checkIn, checkOut, pageable)
-            ;
+            .findAvailableRooms(
+                request.checkIn(),
+                request.checkOut(),
+                mapper.toPageRequest(request));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Hotel> getAvailableHotelList(LocalDate checkIn, LocalDate checkOut, int page, int size) {
-        var pageable = Paginator.validate(page, size);
-
+    public Page<Hotel> getAvailableHotelList(PageableRequest request) {
         return hotelRepository
-                .findAvailableHotels(checkIn, checkOut, pageable)
+                .findAvailableHotels(
+                    request.checkIn(),
+                    request.checkOut(),
+                    mapper.toPageRequest(request))
                 ;
     }
 }

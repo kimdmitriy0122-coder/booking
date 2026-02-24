@@ -1,11 +1,11 @@
 package com.example.j_booking.validation;
 
 import com.example.j_booking.dto.HotelBookingRequest;
-import com.example.j_booking.validation.annotations.CheckoutDateValidationAnnotation;
+import com.example.j_booking.validation.annotations.HotelBookingRequestValidationAnnotation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CheckoutDateValidation implements ConstraintValidator<CheckoutDateValidationAnnotation, HotelBookingRequest> {
+public class HotelBookingRequestValidation implements ConstraintValidator<HotelBookingRequestValidationAnnotation, HotelBookingRequest> {
 
     @Override
     public boolean isValid(HotelBookingRequest request,

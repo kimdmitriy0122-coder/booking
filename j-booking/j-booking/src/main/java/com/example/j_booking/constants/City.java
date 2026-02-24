@@ -25,7 +25,19 @@ public enum City {
     // Germany
     BERLIN(Country.GERMANY),
     MUNICH(Country.GERMANY),
-    HAMBURG(Country.GERMANY);
+    HAMBURG(Country.GERMANY),
+
+    PARIS(Country.FRANCE),
+    MARSEILLE(Country.FRANCE),
+    LYON(Country.FRANCE),
+
+    ROME(Country.ITALY),
+    MILAN(Country.ITALY),
+    VENICE(Country.ITALY),
+
+    TOKYO(Country.JAPAN),
+    OSAKA(Country.JAPAN),
+    KYOTO(Country.JAPAN);
 
     private final Country country;
 

@@ -1,6 +1,6 @@
 package com.example.j_booking.validation.annotations;
 
-import com.example.j_booking.validation.CheckoutDateValidation;
+import com.example.j_booking.validation.HotelBookingRequestValidation;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = CheckoutDateValidation.class)
-public @interface CheckoutDateValidationAnnotation {
+@Constraint(validatedBy = HotelBookingRequestValidation.class)
+public @interface HotelBookingRequestValidationAnnotation {
     String message() default "check out date must be after check in date";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

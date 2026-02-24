@@ -6,7 +6,10 @@ public enum Country {
     ENGLAND("EN"),
     USA("US"),
     RUSSIA("RU"),
-    GERMANY("DE");
+    GERMANY("DE"),
+    ITALY("IT"),
+    JAPAN("JP"),
+    FRANCE("FR");
 
     private final String code;
 
