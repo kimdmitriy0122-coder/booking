@@ -16,3 +16,7 @@ spring:
       acks: all
     consumer:
       auto-offset-reset: earliest
+app:
+  services:
+    transaction-api:
+      url: "http://217.29.121.129/bank_api/api/v1/transactions"
