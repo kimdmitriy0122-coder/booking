@@ -16,3 +16,9 @@ spring:
       acks: all
     consumer:
       auto-offset-reset: earliest
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6337}
+  cache:
+    type: redis

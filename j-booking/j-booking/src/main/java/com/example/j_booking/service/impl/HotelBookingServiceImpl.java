@@ -17,6 +17,8 @@ import com.example.j_booking.utils.Paginator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,24 +33,17 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     HotelBookingMapper mapper;
 
     @Override
+    @Cacheable(value = "rooms", key = "#id")
     public Room getRoomById(Long id) {
         return roomRepository
                 .findById(id)
                 .orElseThrow(() -> new NoSuchRoomException("No room found with id: " + id));
     }
 
-//    @Override
-//    public HotelBookingResponse checkRoomAvailabilityWithDates(BookingRecord record) {
-//        return new HotelBookingResponse(
-//                record.getRoom(),
-//                record.getCheckIn(),
-//                record.getCheckOut(),
-//                status
-//        );
-//    }
-
     @Override
     @Transactional
+    //после бронирования комнаты удалить кэш
+    @CacheEvict(value = {"availableRooms", "availableHotels"}, allEntries = true)
     public HotelBookingResponse bookHotelRoomByRecord(BookingRecord record) {
         BookingRecord savedRecord = bookingRecordRepository.save(record);
         return new HotelBookingResponse(
@@ -79,6 +74,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "availableRooms", key = "#request")
     public Page<Room> getAvailableRoomList(PageableRequest request) {
         return roomRepository
             .findAvailableRooms(
@@ -89,6 +85,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "availableHotels", key = "#request")
     public Page<Hotel> getAvailableHotelList(PageableRequest request) {
         return hotelRepository
                 .findAvailableHotels(
