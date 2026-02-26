@@ -1,0 +1,38 @@
+package com.example.j_booking.service.impl;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+@ExtendWith(MockitoExtension.class)
+class HotelBookingServiceImplTest {
+
+    @Test
+    void getRoomById() {
+    }
+
+    @Test
+    void checkRoomAvailabilityWithDates() {
+    }
+
+    @Test
+    void bookHotelRoomByRequest() {
+    }
+
+    @Test
+    void getAvailableRoomList() {
+    }
+
+    @Test
+    void getAvailableHotelList() {
+    }
+
+    @Test
+    void getBookingRecordByRequest() {
+    }
+
+    @Test
+    void checkStatusByRecord() {
+    }
+}

@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "rooms", schema = "booking", indexes = {
         @Index(name = "idx_room_id_unq", columnList = "id", unique = true)
@@ -22,10 +24,10 @@ import lombok.experimental.SuperBuilder;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     @Column(name = "hotel_id")
-    Long hotelId;
+    UUID hotelId;
 
     @Column(name = "room_class")
     @Enumerated(EnumType.STRING)

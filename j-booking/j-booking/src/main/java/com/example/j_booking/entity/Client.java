@@ -13,6 +13,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "clients", schema = "booking")
 @Getter
@@ -22,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     String name;
     String surname;

@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "address", schema = "booking")
 @Getter
@@ -22,7 +24,7 @@ import lombok.Setter;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    UUID id;
     @Enumerated(EnumType.STRING)
     private Country country;
     @Enumerated(EnumType.STRING)
