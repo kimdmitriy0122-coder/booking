@@ -24,7 +24,8 @@ services:
     container_name: redis_server # Открываем стандартный порт Redis 6379
     ports:
       - "6379:6379"
-    command: redis-server --requirepass secure_redis_pass --appendonly yes
+#    command: redis-server --requirepass secure_redis_pass --appendonly yes
+    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     restart: always

@@ -1,12 +1,9 @@
 package com.example.j_booking.repository;
 
-import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface BookingRecordRepository extends JpaRepository<BookingRecord, Long> {
 

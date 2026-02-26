@@ -1,7 +1,6 @@
 package com.example.j_booking.repository;
 
 import com.example.j_booking.entity.Hotel;
-import com.example.j_booking.entity.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
     @Query("""
