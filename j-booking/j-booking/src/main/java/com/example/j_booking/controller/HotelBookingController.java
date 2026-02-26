@@ -24,16 +24,8 @@ public class HotelBookingController {
 
     @GetMapping("/isRoomAvailableForDates")
     public ResponseEntity<HotelBookingResponse> getRoomAvailability(@Valid HotelBookingRequest request){
-        BookingRecord record = service.getBookingRecordByRequest(request);
-        return ResponseEntity
-                .ok()
-                .body(HotelBookingResponse
-                        .getResponseWithoutMessage(
-                                service.getRoomById(request.roomId()),
-                                request.checkIn(),
-                                request.checkOut(),
-                                service.checkStatusByRecord(record)
-                        ));
+        HotelBookingResponse response = service.checkRoomAvailabilityWithDates(request);
+        return ResponseEntity.ok(response);
     }
     @GetMapping("/getAvailableRoomList")
     public Page<Room> getAvailableRoomList(@Valid PageableRequest request){
@@ -41,30 +33,8 @@ public class HotelBookingController {
     }
     @PostMapping("/bookRoomWithDates")
     public ResponseEntity<HotelBookingResponse> bookRoomWithDates(@Valid @RequestBody HotelBookingRequest request) {
-        BookingRecord record = service.getBookingRecordByRequest(request);
-        BookingStatus status = service.checkStatusByRecord(record);
-        ResponseEntity<HotelBookingResponse> response;
-        if(!status.equals(BookingStatus.FREE))
-            response = ResponseEntity
-                .ok()
-                .body(
-                    HotelBookingResponse
-                        .getResponseWithMessage(
-                            record.getRoom(),
-                            record.getCheckIn(),
-                            record.getCheckOut(),
-                            BookingStatus.BOOKED,
-                    "couldn'n book room. It's already booked"
-                ));
-        else{
-            response = ResponseEntity
-                .ok()
-                .body(
-                    service.bookHotelRoomByRecord(record)
-                );
-
-        }
-        return response;
+        HotelBookingResponse response = service.bookHotelRoomByRequest(request);
+        return ResponseEntity.ok(response);
     }
     @GetMapping("/getAvailableHotelList")
     public Page<Hotel> getAvailableHotelList(@Valid PageableRequest request){

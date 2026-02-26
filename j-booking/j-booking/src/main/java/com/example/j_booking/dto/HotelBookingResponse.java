@@ -2,6 +2,8 @@ package com.example.j_booking.dto;
 
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.entity.Room;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -11,6 +13,7 @@ public record HotelBookingResponse(
     LocalDate checkIn,
     LocalDate checkOut,
     BookingStatus status,
+    @Getter
     String message
 ) {
     public static HotelBookingResponse getResponseWithMessage(Room room, LocalDate checkIn, LocalDate checkOut, BookingStatus status, String message) {
@@ -19,4 +22,5 @@ public record HotelBookingResponse(
     public static HotelBookingResponse getResponseWithoutMessage(Room room, LocalDate checkIn, LocalDate checkOut, BookingStatus status) {
         return new HotelBookingResponse(room, checkIn, checkOut, status, null);
     }
+
 }

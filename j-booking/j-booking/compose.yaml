@@ -18,6 +18,30 @@ services:
       # Политика перезапуска
     restart: always
 
-    # Объявление внешнего тома для сохранения данных
+
+  redis:
+    image: redis:7.2-alpine # Легкий и актуальный образ Redis
+    container_name: redis_server # Открываем стандартный порт Redis 6379
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass secure_redis_pass --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: always
+
+
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander:latest
+    container_name: redis_commander_ui
+    environment:
+      REDIS_HOSTS: "local_redis:redis:6379"
+      REDIS_PASSWORD: "secure_redis_pass" # Имя, которое будет отображаться в интерфейсе
+      REDIS_CLUSTERS: "default"
+    ports: # Открываем порт для веб-интерфейса (например, 8086)
+      - "8086:8086"
+    depends_on:
+      - redis
+    restart: always
 volumes:
   postgres_data:
+  redis_data:

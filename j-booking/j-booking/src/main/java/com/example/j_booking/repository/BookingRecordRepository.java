@@ -1,5 +1,6 @@
 package com.example.j_booking.repository;
 
+import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,5 @@ public interface BookingRecordRepository extends JpaRepository<BookingRecord, Lo
             "WHERE b.room = :#{#rec.getRoom()} " +
             "AND b.checkIn < :#{#rec.getCheckOut()} " +
             "AND b.checkOut > :#{#rec.getCheckIn()}")
-    public boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
-
+    boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
 }

@@ -21,8 +21,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "booking_records", schema = "booking")
@@ -48,4 +50,7 @@ public class BookingRecord {
 
     @Enumerated(EnumType.STRING)
     BookingStatus status;
+
+    @CreationTimestamp
+    LocalDateTime created;
 }

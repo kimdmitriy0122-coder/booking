@@ -13,13 +13,14 @@ import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.HotelRepository;
 import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.HotelBookingService;
-import com.example.j_booking.utils.Paginator;
+import com.example.j_booking.service.SaverBookingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     RoomRepository roomRepository;
     HotelRepository hotelRepository;
     HotelBookingMapper mapper;
+    SaverBookingService saverBookingService;
 
     @Override
     @Cacheable(value = "rooms", key = "#id")
@@ -41,35 +43,38 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     }
 
     @Override
-    @Transactional
-    //после бронирования комнаты удалить кэш
+    @Transactional(readOnly = true)
+    public HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request) {
+        BookingRecord record = getBookingRecordByRequest(request);
+        BookingStatus status = checkStatusByRecord(record);
+        String message;
+        if(!status.equals(BookingStatus.FREE)){
+            message = "can't book room because it's already booked";
+        }
+        else{
+            message = "room booked";
+        }
+        return mapper.toHotelBookingResponse(record, message);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     @CacheEvict(value = {"availableRooms", "availableHotels"}, allEntries = true)
-    public HotelBookingResponse bookHotelRoomByRecord(BookingRecord record) {
-        BookingRecord savedRecord = bookingRecordRepository.save(record);
-        return new HotelBookingResponse(
-                savedRecord.getRoom(),
-                savedRecord.getCheckIn(),
-                savedRecord.getCheckOut(),
-                BookingStatus.BOOKED,
-            "room has been booked"
-        );
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {
-        BookingRecord record = mapper.toEntity(request);
-        record.setRoom(getRoomById(request.roomId()));
-        return record;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public BookingStatus checkStatusByRecord(BookingRecord record) {
-        return bookingRecordRepository
-            .isRoomFreeByDates(record) ?
-            BookingStatus.BOOKED :
-            BookingStatus.FREE;
+    public HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request) {
+        BookingRecord record = getBookingRecordByRequest(request);
+        BookingStatus status = checkStatusByRecord(record);
+        HotelBookingResponse response;
+        if(!status.equals(BookingStatus.FREE)){
+            response = mapper.toHotelBookingResponse(
+                record,
+                "can't book room because it's already booked");
+        }
+        else{
+            response = mapper.toHotelBookingResponse(
+                saverBookingService.saveBookingRecord(record),
+                "room booked");
+        }
+        return response;
     }
 
     @Override
@@ -93,5 +98,18 @@ public class HotelBookingServiceImpl implements HotelBookingService {
                     request.checkOut(),
                     mapper.toPageRequest(request))
                 ;
+    }
+
+    public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {
+        BookingRecord record = mapper.toBookingRecord(request);
+        record.setRoom(getRoomById(request.roomId()));
+        return record;
+    }
+
+    public BookingStatus checkStatusByRecord(BookingRecord record) {
+        return bookingRecordRepository
+            .isRoomFreeByDates(record) ?
+            BookingStatus.BOOKED :
+            BookingStatus.FREE;
     }
 }

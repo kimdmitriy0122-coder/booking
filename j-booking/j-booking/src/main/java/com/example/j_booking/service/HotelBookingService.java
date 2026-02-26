@@ -13,11 +13,13 @@ import java.time.LocalDate;
 
 public interface HotelBookingService {
     Room getRoomById(Long id);
-    BookingRecord getBookingRecordByRequest(HotelBookingRequest request);
-    HotelBookingResponse bookHotelRoomByRecord(BookingRecord record);
-//    HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request);
-    BookingStatus checkStatusByRecord(BookingRecord record);
+//    BookingRecord getBookingRecordByRequest(HotelBookingRequest request);
+//    HotelBookingResponse bookHotelRoomByRecord(BookingRecord record);
+    HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request);
+//    HotelBookingResponse checkRoomAvailability(HotelBookingRequest request);
+//    BookingStatus checkStatusByRecord(BookingRecord record);
     Page<Room> getAvailableRoomList(PageableRequest request);
     Page<Hotel> getAvailableHotelList(PageableRequest request);
+    HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request);
 
 }
