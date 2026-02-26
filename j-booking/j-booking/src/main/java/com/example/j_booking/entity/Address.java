@@ -24,7 +24,7 @@ import java.util.UUID;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID id;
+    Long id;
     @Enumerated(EnumType.STRING)
     private Country country;
     @Enumerated(EnumType.STRING)

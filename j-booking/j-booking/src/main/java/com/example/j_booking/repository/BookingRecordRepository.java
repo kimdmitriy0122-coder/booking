@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface BookingRecordRepository extends JpaRepository<BookingRecord, Long> {
+import java.util.UUID;
+
+public interface BookingRecordRepository extends JpaRepository<BookingRecord, UUID> {
 
     @Query("SELECT count(b) > 0 " +
             "FROM BookingRecord b " +

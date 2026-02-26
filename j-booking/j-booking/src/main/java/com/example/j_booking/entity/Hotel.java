@@ -37,7 +37,7 @@ import java.util.UUID;
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID id;
+    Long id;
 
     String name;
 

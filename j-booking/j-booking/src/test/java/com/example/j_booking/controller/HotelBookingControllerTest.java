@@ -4,10 +4,16 @@ import com.example.j_booking.constant.TestConstants;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.RoomCapacity;
 import com.example.j_booking.constants.RoomClass;
+import com.example.j_booking.dto.HotelBookingRequest;
+import com.example.j_booking.dto.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Room;
+import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
+import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.impl.HotelBookingServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,32 +22,42 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static reactor.core.publisher.Mono.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HotelBookingControllerTest {
     @Mock
     BookingRecordRepository bookingRecordRepository;
+    @Mock
+    RoomRepository roomRepository;
+    @Mock
+    HotelBookingMapper hotelBookingMapper;
 
     @InjectMocks
     HotelBookingServiceImpl hotelBookingService;
 
-    @Test
-    void getRoomAvailability() {
+    Room room;
+    BookingRecord record1;
+    HotelBookingRequest request;
+    HotelBookingResponse requiredResponse;
 
-        Room room = Room
+    @BeforeEach
+    void setUp() {
+         room = Room
                 .builder()
-                .hotelId(TestConstants.ID)
-                .id(TestConstants.ID)
+                .hotelId(1L)
+                .id(1L)
                 .roomClass(RoomClass.STANDARD)
                 .roomCapacity(RoomCapacity.DOUBLE)
                 .build()
-        ;
+                ;
 
-        BookingRecord record1 = BookingRecord
+        record1 = BookingRecord
                 .builder()
                 .room(room)
                 .id(TestConstants.ID)
@@ -51,7 +67,32 @@ class HotelBookingControllerTest {
                 .created(LocalDateTime.now())
                 .build();
 
-//        when(hotelBookingService.checkRoomAvailabilityWithDates())
+        request = new HotelBookingRequest(
+                1L,
+                LocalDate.of(2026, 1, 10),
+                LocalDate.of(2026, 1, 11)
+        );
+
+        requiredResponse = new HotelBookingResponse(
+                room,
+                LocalDate.of(2026, 1, 10),
+                LocalDate.of(2026, 1, 11),
+                BookingStatus.BOOKED,
+                "can't book room because it's already booked"
+        );
+    }
+
+    @Test
+    @DisplayName("checking availability when room already booked")
+    void getRoomAvailability() {
+
+        when(hotelBookingMapper.toBookingRecord(request)).thenReturn(record1);
+        when(roomRepository.findById(room.getId())).thenReturn(Optional.of(room));
+        when(hotelBookingService.checkRoomAvailabilityWithDates(request)).thenReturn(requiredResponse);
+
+        HotelBookingResponse actualResponse = hotelBookingService.checkRoomAvailabilityWithDates(request);
+
+        assertThat(actualResponse).isEqualTo(requiredResponse);
     }
 
     @Test

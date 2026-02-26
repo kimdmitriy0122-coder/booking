@@ -24,10 +24,10 @@ import java.util.UUID;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID id;
+    Long id;
 
     @Column(name = "hotel_id")
-    UUID hotelId;
+    Long hotelId;
 
     @Column(name = "room_class")
     @Enumerated(EnumType.STRING)
