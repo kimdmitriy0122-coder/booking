@@ -1,4 +1,4 @@
-package com.example.j_booking.dto;
+package com.example.j_booking.dto.response;
 
 import com.example.j_booking.constants.Currency;
 import com.example.j_booking.constants.TransactionStatus;

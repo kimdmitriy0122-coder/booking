@@ -1,4 +1,4 @@
-package com.example.j_booking.dto;
+package com.example.j_booking.dto.request;
 
 import com.example.j_booking.validation.annotations.PageableRequestValidationAnnotation;
 import jakarta.validation.constraints.NotNull;

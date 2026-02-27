@@ -1,9 +1,13 @@
 package com.example.j_booking.controller;
 
 import com.example.j_booking.constants.BookingStatus;
-import com.example.j_booking.dto.HotelBookingRequest;
-import com.example.j_booking.dto.HotelBookingResponse;
-import com.example.j_booking.dto.PageableRequest;
+import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.HotelBookingResponse;
+import com.example.j_booking.dto.HotelDto;
+import com.example.j_booking.dto.response.HotelListResponse;
+import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.RoomDto;
+import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
@@ -28,8 +32,8 @@ public class HotelBookingController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/getAvailableRoomList")
-    public Page<Room> getAvailableRoomList(@Valid PageableRequest request){
-        return service.getAvailableRoomList(request);
+    public ResponseEntity<RoomListResponse<RoomDto>> getAvailableRoomList(@Valid PageableRequest request){
+        return ResponseEntity.ok(service.getAvailableRoomList(request));
     }
     @PostMapping("/bookRoomWithDates")
     public ResponseEntity<HotelBookingResponse> bookRoomWithDates(@Valid @RequestBody HotelBookingRequest request) {
@@ -37,7 +41,7 @@ public class HotelBookingController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/getAvailableHotelList")
-    public Page<Hotel> getAvailableHotelList(@Valid PageableRequest request){
-        return service.getAvailableHotelList(request);
+    public ResponseEntity<HotelListResponse<HotelDto>> getAvailableHotelList(@Valid PageableRequest request){
+        return ResponseEntity.ok(service.getAvailableHotelList(request));
     }
 }

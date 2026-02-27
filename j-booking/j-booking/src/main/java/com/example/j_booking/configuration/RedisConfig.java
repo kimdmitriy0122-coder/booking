@@ -33,13 +33,13 @@ public class RedisConfig {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        var configuration = new RedisStandaloneConfiguration();
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(props.getHost());
         configuration.setPort(props.getPort());
         configuration.setPassword(props.getPassword());
         configuration.setDatabase(props.getDatabase());
 
-        var lettuceClientConfiguration = LettuceClientConfiguration
+        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration
             .builder()
             .commandTimeout(Duration.ofMillis(props.getTimeout()))
             .shutdownTimeout(Duration.ofMillis(props.getShutdownTimeout()))
@@ -61,15 +61,9 @@ public class RedisConfig {
                 RedisSerializationContext.SerializationPair
                     .fromSerializer(redisJsonSerializer));
 
-//        Map<String, RedisCacheConfiguration> perCacheTtl = Map.of(
-//            ORDER_REDIS_KEYS, defaultConfiguration.entryTtl(Duration.ofMillis(props.getOrderTtl())),
-//            MERCHANT_REDIS_KEYS, defaultConfiguration.entryTtl(Duration.ofMillis(props.getMerchantTtl()))
-//        );
-
         return RedisCacheManager
             .builder(factory)
             .cacheDefaults(defaultConfiguration)
-//            .withInitialCacheConfigurations(perCacheTtl)
             .transactionAware()
             .build();
     }

@@ -1,9 +1,13 @@
 package com.example.j_booking.service;
 
 import com.example.j_booking.constants.BookingStatus;
-import com.example.j_booking.dto.HotelBookingRequest;
-import com.example.j_booking.dto.HotelBookingResponse;
-import com.example.j_booking.dto.PageableRequest;
+import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.HotelBookingResponse;
+import com.example.j_booking.dto.HotelDto;
+import com.example.j_booking.dto.response.HotelListResponse;
+import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.RoomDto;
+import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
@@ -18,8 +22,9 @@ public interface HotelBookingService {
     HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request);
 //    HotelBookingResponse checkRoomAvailability(HotelBookingRequest request);
 //    BookingStatus checkStatusByRecord(BookingRecord record);
-    Page<Room> getAvailableRoomList(PageableRequest request);
-    Page<Hotel> getAvailableHotelList(PageableRequest request);
+//    Page<Room> getAvailableRoomList(PageableRequest request);
+    RoomListResponse<RoomDto> getAvailableRoomList(PageableRequest request);
+    HotelListResponse<HotelDto> getAvailableHotelList(PageableRequest request);
     HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request);
 
 }

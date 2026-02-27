@@ -22,7 +22,4 @@ public class RedisProps {
 
     int timeout;
     int shutdownTimeout;
-
-    int orderTtl;
-    int merchantTtl;
 }

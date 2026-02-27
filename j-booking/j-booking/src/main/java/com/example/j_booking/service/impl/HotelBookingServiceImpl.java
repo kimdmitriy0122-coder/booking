@@ -1,9 +1,13 @@
 package com.example.j_booking.service.impl;
 
 import com.example.j_booking.constants.BookingStatus;
-import com.example.j_booking.dto.HotelBookingRequest;
-import com.example.j_booking.dto.HotelBookingResponse;
-import com.example.j_booking.dto.PageableRequest;
+import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.HotelBookingResponse;
+import com.example.j_booking.dto.HotelDto;
+import com.example.j_booking.dto.response.HotelListResponse;
+import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.RoomDto;
+import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
@@ -17,10 +21,8 @@ import com.example.j_booking.service.SaverBookingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,46 +60,64 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @CacheEvict(value = {"availableRooms", "availableHotels"}, allEntries = true)
+//    @Transactional(readOnly = true)
+//    @CacheEvict(value = {"availableRooms", "availableHotels"}, allEntries = true)
     public HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request) {
         BookingRecord record = getBookingRecordByRequest(request);
         BookingStatus status = checkStatusByRecord(record);
         HotelBookingResponse response;
-        if(!status.equals(BookingStatus.FREE)){
+        if(!(status.equals(BookingStatus.FREE) || status.equals(BookingStatus.CANCELLED))){
             response = mapper.toHotelBookingResponse(
                 record,
                 "can't book room because it's already booked");
         }
         else{
             response = mapper.toHotelBookingResponse(
-                saverBookingService.saveBookingRecord(record),
+                saverBookingService.saveBookingRecord(record, BookingStatus.BOOKED),
                 "room booked");
         }
         return response;
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    @Cacheable(value = "availableRooms", key = "#request")
+//    public Page<Room> getAvailableRoomList(PageableRequest request) {
+//        return roomRepository
+//            .findAvailableRooms(
+//                request.checkIn(),
+//                request.checkOut(),
+//                mapper.toPageRequest(request));
+//    }
+
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "availableRooms", key = "#request")
-    public Page<Room> getAvailableRoomList(PageableRequest request) {
-        return roomRepository
+    @Cacheable(
+        value = "availableRooms",
+        key = "'page=' + #page + ':size=' + #size"
+    )
+    public RoomListResponse<RoomDto> getAvailableRoomList(PageableRequest request) {
+        Page<Room> rooms = roomRepository
             .findAvailableRooms(
                 request.checkIn(),
                 request.checkOut(),
                 mapper.toPageRequest(request));
+        return mapper.toRoomListResponse(rooms);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "availableHotels", key = "#request")
-    public Page<Hotel> getAvailableHotelList(PageableRequest request) {
-        return hotelRepository
-                .findAvailableHotels(
-                    request.checkIn(),
-                    request.checkOut(),
-                    mapper.toPageRequest(request))
-                ;
+    @Cacheable(
+        value = "availableHotels",
+        key = "'page=' + #page + ':size=' + #size"
+    )
+    public HotelListResponse<HotelDto> getAvailableHotelList(PageableRequest request) {
+        Page<Hotel> hotels = hotelRepository
+            .findAvailableHotels(
+                request.checkIn(),
+                request.checkOut(),
+                mapper.toPageRequest(request));
+        return mapper.toHotelListResponse(hotels);
     }
 
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {

@@ -1,6 +1,6 @@
 package com.example.j_booking.validation;
 
-import com.example.j_booking.dto.HotelBookingRequest;
+import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.validation.annotations.HotelBookingRequestValidationAnnotation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -1,9 +1,8 @@
-package com.example.j_booking.dto;
+package com.example.j_booking.dto.response;
 
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.entity.Room;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 

@@ -37,7 +37,10 @@ import java.util.UUID;
 public class BookingRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID id;
+    Long id;
+
+    @Column(name = "payment_id")
+    UUID paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")

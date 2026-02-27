@@ -1,11 +1,10 @@
 package com.example.j_booking.controller;
 
-import com.example.j_booking.constant.TestConstants;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.RoomCapacity;
 import com.example.j_booking.constants.RoomClass;
-import com.example.j_booking.dto.HotelBookingRequest;
-import com.example.j_booking.dto.HotelBookingResponse;
+import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Room;
 import com.example.j_booking.mapper.HotelBookingMapper;
@@ -23,9 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -60,9 +57,10 @@ class HotelBookingControllerTest {
         record1 = BookingRecord
                 .builder()
                 .room(room)
-                .id(TestConstants.ID)
-                .checkIn(LocalDate.of(2026, 01, 10))
-                .checkOut(LocalDate.of(2026, 01, 11))
+//                .id(TestConstants.ID)
+                .id(1L)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
                 .status(BookingStatus.BOOKED)
                 .created(LocalDateTime.now())
                 .build();

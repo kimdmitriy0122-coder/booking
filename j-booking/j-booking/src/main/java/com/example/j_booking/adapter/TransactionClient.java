@@ -1,7 +1,7 @@
 package com.example.j_booking.adapter;
 
-import com.example.j_booking.dto.PaymentRequest;
-import com.example.j_booking.dto.PaymentResponse;
+import com.example.j_booking.dto.request.PaymentRequest;
+import com.example.j_booking.dto.response.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

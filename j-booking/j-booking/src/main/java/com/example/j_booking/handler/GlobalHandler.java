@@ -25,7 +25,7 @@ public class GlobalHandler {
         List<ObjectError> globalErrors = exception.getBindingResult().getGlobalErrors();
         errorMessage.append(ExceptionCode.NOT_VALID_REQUEST.getMessage());
         errorMessage.append(" ");
-        if(fieldErrors.size() > 0){
+        if(!fieldErrors.isEmpty()){
             errorMessage.append(
                     fieldErrors
                     .stream()
@@ -33,7 +33,7 @@ public class GlobalHandler {
                     .toList()
             );
         }
-        else if(globalErrors.size() > 0){
+        else if(!globalErrors.isEmpty()){
             errorMessage
                     .append(" ")
                     .append(exception

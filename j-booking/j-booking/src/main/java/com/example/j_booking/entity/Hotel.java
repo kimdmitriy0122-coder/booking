@@ -43,11 +43,14 @@ public class Hotel {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
-    private Address address;
+    Address address;
 
     @Enumerated(EnumType.STRING)
     BuildingType buildingType;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Room> rooms;
+        @JoinColumn(name = "hotel_id")
+    List<Room> rooms;
+
+    short rating;
 }

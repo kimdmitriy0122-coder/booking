@@ -1,6 +1,6 @@
 package com.example.j_booking.validation;
 
-import com.example.j_booking.dto.PageableRequest;
+import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.validation.annotations.PageableRequestValidationAnnotation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

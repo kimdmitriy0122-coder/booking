@@ -5,6 +5,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  properties:
+    hibernate:
+      format_sql: true
   flyway:
     schemas: booking
     locations: classpath:db/migration
@@ -20,6 +23,9 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      timeout: 2000         # 2 секунд на команды
+      shutdown-timeout: 200 # 200 мс на закрытие
+      default-ttl: 3600000  # 1 час в миллисекундах
   cache:
     type: redis
 app:
