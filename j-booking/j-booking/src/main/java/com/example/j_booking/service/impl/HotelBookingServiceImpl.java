@@ -1,7 +1,9 @@
 package com.example.j_booking.service.impl;
 
 import com.example.j_booking.constants.BookingStatus;
+import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
@@ -60,8 +62,6 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     }
 
     @Override
-//    @Transactional(readOnly = true)
-//    @CacheEvict(value = {"availableRooms", "availableHotels"}, allEntries = true)
     public HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request) {
         BookingRecord record = getBookingRecordByRequest(request);
         BookingStatus status = checkStatusByRecord(record);
@@ -78,17 +78,6 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         }
         return response;
     }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    @Cacheable(value = "availableRooms", key = "#request")
-//    public Page<Room> getAvailableRoomList(PageableRequest request) {
-//        return roomRepository
-//            .findAvailableRooms(
-//                request.checkIn(),
-//                request.checkOut(),
-//                mapper.toPageRequest(request));
-//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -118,6 +107,17 @@ public class HotelBookingServiceImpl implements HotelBookingService {
                 request.checkOut(),
                 mapper.toPageRequest(request));
         return mapper.toHotelListResponse(hotels);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(
+        value = "clientHistory",
+        key = "'page=' + #page + ':size=' + #size"
+    )
+    public BookingRecordListResponse getBookingRecordList(BookingRecordListRequest request) {
+        Page<BookingRecord> records = bookingRecordRepository.getBookingRecordsByClient_Id(request.client_id());
+        return mapper.toBookingRecordListResponse(records);
     }
 
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {

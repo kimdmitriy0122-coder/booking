@@ -57,4 +57,8 @@ public class BookingRecord {
 
     @CreationTimestamp
     LocalDateTime created;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    Client client;
 }

@@ -1,6 +1,8 @@
 package com.example.j_booking.mapper;
 
+import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
@@ -43,6 +45,9 @@ public interface HotelBookingMapper {
     List<HotelDto> toHotelDtoList(List<Hotel> hotels);
     HotelDto toDto(Hotel hotel);
 
+    List<BookingRecordDto> toBookingRecordDtoList(List<BookingRecord> hotels);
+    BookingRecordDto toDto(BookingRecord record);
+
     default RoomListResponse<RoomDto> toRoomListResponse(Page<Room> page) {
         return new RoomListResponse<>(
             toRoomDtoList(page.getContent()),
@@ -60,6 +65,16 @@ public interface HotelBookingMapper {
             page.getSize(),
             page.getTotalElements(),
             page.getTotalPages()
+        );
+    }
+
+    default BookingRecordListResponse<BookingRecordDto> toBookingRecordListResponse(Page<BookingRecord> page) {
+//        return BookingRecordListResponse
+//            .builder()
+//            .bookingRecordDtoList(toBookingRecordDtoList(page.getContent()))
+//            .build();
+        return new BookingRecordListResponse<>(
+            toBookingRecordDtoList(page.getContent())
         );
     }
 }

@@ -1,24 +1,20 @@
 package com.example.j_booking.controller;
 
-import com.example.j_booking.constants.BookingStatus;
+import com.example.j_booking.dto.BookingRecordDto;
+import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
 import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.RoomDto;
 import com.example.j_booking.dto.response.RoomListResponse;
-import com.example.j_booking.entity.BookingRecord;
-import com.example.j_booking.entity.Hotel;
-import com.example.j_booking.entity.Room;
 import com.example.j_booking.service.HotelBookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/booking/")
@@ -43,5 +39,10 @@ public class HotelBookingController {
     @GetMapping("/getAvailableHotelList")
     public ResponseEntity<HotelListResponse<HotelDto>> getAvailableHotelList(@Valid PageableRequest request){
         return ResponseEntity.ok(service.getAvailableHotelList(request));
+    }
+
+    @GetMapping("/getAllClientHistory")
+    public ResponseEntity<BookingRecordListResponse<BookingRecordDto>> getBookingRecordList(@Valid BookingRecordListRequest request){
+        return ResponseEntity.ok(service.getBookingRecordList(request));
     }
 }

@@ -11,6 +11,8 @@ import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.impl.HotelBookingServiceImpl;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class HotelBookingControllerTest {
     @Mock
     BookingRecordRepository bookingRecordRepository;

@@ -49,8 +49,9 @@ public class Hotel {
     BuildingType buildingType;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-        @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "hotel_id")
     List<Room> rooms;
 
+    @Column(nullable = true)
     short rating;
 }
