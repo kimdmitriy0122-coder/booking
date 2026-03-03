@@ -2,11 +2,12 @@ package com.example.j_booking.mapper;
 
 import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
-import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.request.PageableRequestWithDates;
 import com.example.j_booking.dto.RoomDto;
 import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
@@ -32,13 +33,6 @@ public interface HotelBookingMapper {
     @Mapping(target = "message", source = "message")
     HotelBookingResponse toHotelBookingResponse(BookingRecord dto, String message);
 
-    @Mapping(target = "pageNumber", source = "page")
-    @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")
-    // MapStruct не может создать PageRequest через сеттеры, поэтому используем фабричный метод
-    default PageRequest toPageRequest(PageableRequest request) {
-        return Paginator.validate(request.page(), request.size());
-    }
-
     List<RoomDto> toRoomDtoList(List<Room> rooms);
     RoomDto toDto(Room room);
 
@@ -47,6 +41,21 @@ public interface HotelBookingMapper {
 
     List<BookingRecordDto> toBookingRecordDtoList(List<BookingRecord> hotels);
     BookingRecordDto toDto(BookingRecord record);
+
+    @Mapping(target = "pageNumber", source = "page")
+    @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")
+    // MapStruct не может создать PageRequest через сеттеры, поэтому используем фабричный метод
+    default PageRequest toPageRequest(PageableRequestWithDates request) {
+        return Paginator.validate(request.page(), request.size());
+    }
+
+    @Mapping(target = "pageNumber", source = "page")
+    @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")
+    // MapStruct не может создать PageRequest через сеттеры, поэтому используем фабричный метод
+    default PageRequest toPageRequest(PageableRequest request) {
+        return Paginator.validate(request.page(), request.size());
+    }
+
 
     default RoomListResponse<RoomDto> toRoomListResponse(Page<Room> page) {
         return new RoomListResponse<>(
@@ -73,6 +82,7 @@ public interface HotelBookingMapper {
 //            .builder()
 //            .bookingRecordDtoList(toBookingRecordDtoList(page.getContent()))
 //            .build();
+        System.out.println(page.getContent() + "888");
         return new BookingRecordListResponse<>(
             toBookingRecordDtoList(page.getContent())
         );

@@ -18,6 +18,8 @@ public record PaymentRequest(
         Long amount,
         @NotNull(message = "currency required")
         Currency currency,
+        @NotNull(message = "merchant required")
+        UUID merchantId,
         @NotBlank(message = "senderName required")
         String senderName,
         @NotBlank(message = "senderToken required")

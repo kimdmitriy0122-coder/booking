@@ -3,12 +3,14 @@ package com.example.j_booking.controller;
 import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.request.PageableRequestWithDates;
 import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
-import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.RoomDto;
+import com.example.j_booking.dto.response.PaymentResponse;
 import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.service.HotelBookingService;
 import jakarta.validation.Valid;
@@ -22,27 +24,32 @@ import org.springframework.web.bind.annotation.*;
 public class HotelBookingController {
     private final HotelBookingService service;
 
-    @GetMapping("/isRoomAvailableForDates")
+    @GetMapping("/is-room-available-for-dates")
     public ResponseEntity<HotelBookingResponse> getRoomAvailability(@Valid HotelBookingRequest request){
         HotelBookingResponse response = service.checkRoomAvailabilityWithDates(request);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/getAvailableRoomList")
-    public ResponseEntity<RoomListResponse<RoomDto>> getAvailableRoomList(@Valid PageableRequest request){
+    @GetMapping("/get-available-room-list")
+    public ResponseEntity<RoomListResponse<RoomDto>> getAvailableRoomList(@Valid PageableRequestWithDates request){
         return ResponseEntity.ok(service.getAvailableRoomList(request));
     }
-    @PostMapping("/bookRoomWithDates")
+    @PostMapping("/book-room-with-dates")
     public ResponseEntity<HotelBookingResponse> bookRoomWithDates(@Valid @RequestBody HotelBookingRequest request) {
         HotelBookingResponse response = service.bookHotelRoomByRequest(request);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/getAvailableHotelList")
-    public ResponseEntity<HotelListResponse<HotelDto>> getAvailableHotelList(@Valid PageableRequest request){
+    @GetMapping("/get-available-hotel-list")
+    public ResponseEntity<HotelListResponse<HotelDto>> getAvailableHotelList(@Valid PageableRequestWithDates request){
         return ResponseEntity.ok(service.getAvailableHotelList(request));
     }
 
-    @GetMapping("/getAllClientHistory")
-    public ResponseEntity<BookingRecordListResponse<BookingRecordDto>> getBookingRecordList(@Valid BookingRecordListRequest request){
-        return ResponseEntity.ok(service.getBookingRecordList(request));
+    @GetMapping("/get-all-client-history")
+    public ResponseEntity<BookingRecordListResponse<BookingRecordDto>> getBookingRecordList(@Valid BookingRecordListRequest recordListRequest, @Valid PageableRequest pageableRequest){
+        return ResponseEntity.ok(service.getBookingRecordList(recordListRequest, pageableRequest));
+    }
+
+    @PostMapping("/confirm-booking-record")
+    public ResponseEntity<PaymentResponse> confirmBooking(BookingRecordDto request){
+        return ResponseEntity.accepted().body(service.confirmBooking(request));
     }
 }

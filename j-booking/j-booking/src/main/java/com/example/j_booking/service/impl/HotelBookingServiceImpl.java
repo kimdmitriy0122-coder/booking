@@ -1,13 +1,15 @@
 package com.example.j_booking.service.impl;
 
 import com.example.j_booking.constants.BookingStatus;
+import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
+import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
-import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.request.PageableRequestWithDates;
 import com.example.j_booking.dto.RoomDto;
 import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
@@ -85,7 +87,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         value = "availableRooms",
         key = "'page=' + #page + ':size=' + #size"
     )
-    public RoomListResponse<RoomDto> getAvailableRoomList(PageableRequest request) {
+    public RoomListResponse<RoomDto> getAvailableRoomList(PageableRequestWithDates request) {
         Page<Room> rooms = roomRepository
             .findAvailableRooms(
                 request.checkIn(),
@@ -100,7 +102,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         value = "availableHotels",
         key = "'page=' + #page + ':size=' + #size"
     )
-    public HotelListResponse<HotelDto> getAvailableHotelList(PageableRequest request) {
+    public HotelListResponse<HotelDto> getAvailableHotelList(PageableRequestWithDates request) {
         Page<Hotel> hotels = hotelRepository
             .findAvailableHotels(
                 request.checkIn(),
@@ -115,8 +117,11 @@ public class HotelBookingServiceImpl implements HotelBookingService {
         value = "clientHistory",
         key = "'page=' + #page + ':size=' + #size"
     )
-    public BookingRecordListResponse getBookingRecordList(BookingRecordListRequest request) {
-        Page<BookingRecord> records = bookingRecordRepository.getBookingRecordsByClient_Id(request.client_id());
+    public BookingRecordListResponse<BookingRecordDto> getBookingRecordList(BookingRecordListRequest bookingRecordListRequest, PageableRequest pageableRequest) {
+        Page<BookingRecord> records = bookingRecordRepository
+            .getBookingRecordsByClientId(
+                bookingRecordListRequest.client_id(),
+                mapper.toPageRequest(pageableRequest));
         return mapper.toBookingRecordListResponse(records);
     }
 

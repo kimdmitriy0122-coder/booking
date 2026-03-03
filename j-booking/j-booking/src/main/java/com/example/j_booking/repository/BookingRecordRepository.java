@@ -1,5 +1,6 @@
 package com.example.j_booking.repository;
 
+import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.entity.BookingRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,5 +19,5 @@ public interface BookingRecordRepository extends JpaRepository<BookingRecord, Lo
             "AND b.checkOut > :#{#rec.getCheckIn()}")
     boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
 
-    Page<BookingRecord> getBookingRecordsByClient_Id(Long clientId, Pageable pageable);
+    Page<BookingRecord> getBookingRecordsByClientId(Long clientId, Pageable pageable);
 }
