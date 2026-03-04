@@ -1,6 +1,7 @@
 package com.example.j_booking.service;
 
 import com.example.j_booking.dto.BookingRecordDto;
+import com.example.j_booking.dto.PaymentDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
@@ -26,5 +27,5 @@ public interface HotelBookingService {
     HotelListResponse<HotelDto> getAvailableHotelList(PageableRequestWithDates request);
     HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request);
     BookingRecordListResponse getBookingRecordList(BookingRecordListRequest bookingRecordListRequest, PageableRequest pageableRequest);
-    BookingRecordDto confirmBooking(BookingRecordDto request);
+    BookingRecordDto confirmBooking(PaymentDto dto);
 }

@@ -1,10 +1,11 @@
 package com.example.j_booking.service.impl;
 
-import com.example.j_booking.adapter.TransactionService;
+import com.example.j_booking.component.adapter.TransactionService;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.Currency;
 import com.example.j_booking.constants.TransactionType;
 import com.example.j_booking.dto.BookingRecordDto;
+import com.example.j_booking.dto.PaymentDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
@@ -134,10 +135,10 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     }
 
     @Override
-    public BookingRecordDto confirmBooking(BookingRecordDto request){
+    public BookingRecordDto confirmBooking(PaymentDto dto){
         PaymentRequest paymentRequest = PaymentRequest
             .builder()
-            .referenceId(request.paymentId())
+            .referenceId(dto.paymentId())
             .amount(1000L)
             .type(TransactionType.P2P)
             .currency(Currency.USD)

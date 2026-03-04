@@ -1,4 +1,4 @@
-package com.example.j_booking.adapter;
+package com.example.j_booking.component.adapter;
 
 import com.example.j_booking.dto.request.PaymentRequest;
 import com.example.j_booking.dto.response.PaymentResponse;

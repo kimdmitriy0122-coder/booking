@@ -1,6 +1,7 @@
 package com.example.j_booking.controller;
 
 import com.example.j_booking.dto.BookingRecordDto;
+import com.example.j_booking.dto.PaymentDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
@@ -49,9 +50,9 @@ public class HotelBookingController {
     }
 
     @PostMapping("/confirm-booking-record")
-    public ResponseEntity<BookingRecordDto> confirmBooking(BookingRecordDto request){
+    public ResponseEntity<BookingRecordDto> confirmBooking(PaymentDto dto){
         return ResponseEntity
             .accepted()
-            .body(service.confirmBooking(request));
+            .body(service.confirmBooking(dto));
     }
 }
