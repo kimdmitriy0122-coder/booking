@@ -1,6 +1,7 @@
 package com.example.j_booking.service.impl;
 
 import com.example.j_booking.component.adapter.TransactionService;
+import com.example.j_booking.configuration.TransactionDataProperties;
 import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.Currency;
 import com.example.j_booking.constants.TransactionType;
@@ -48,6 +49,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     HotelBookingMapper mapper;
     SaverBookingService saverBookingService;
     TransactionService transactionService;
+    TransactionDataProperties transactionDataProperties;
 
     @Override
     @Cacheable(value = "rooms", key = "#id")
@@ -136,23 +138,24 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     @Override
     public BookingRecordDto confirmBooking(PaymentDto dto){
-        PaymentRequest paymentRequest = PaymentRequest
-            .builder()
-            .referenceId(dto.paymentId())
-            .amount(1000L)
-            .type(TransactionType.P2P)
-            .currency(Currency.USD)
-            .merchantId(UUID.fromString("55a78372-9852-440d-9da9-61dedd572464"))
-            .senderName("Hilton")
-            .senderToken("string")
-            .receiverName("bank")
-            .receiverToken("string")
-            .build();
+//        PaymentRequest paymentRequest = PaymentRequest
+//            .builder()
+//            .referenceId(dto.paymentId())
+//            .amount(1000L)
+//            .type(TransactionType.P2P)
+//            .currency(Currency.USD)
+//            .merchantId(UUID.fromString("55a78372-9852-440d-9da9-61dedd572464"))
+//            .senderName("Hilton")
+//            .senderToken("string")
+//            .receiverName("bank")
+//            .receiverToken("string")
+//            .build();
+        PaymentRequest paymentRequest = mapper.toPaymentRequest(dto, transactionDataProperties);
         PaymentResponse paymentResponse = transactionService.sendPayment(paymentRequest);
 
 
 //        return transactionService.sendPayment(paymentRequest);
-        return request;
+        return null;
     }
 
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {

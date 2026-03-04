@@ -32,3 +32,13 @@ app:
   services:
     transaction-api:
       url: "http://217.29.121.129/bank_api/api/v1/transactions"
+  app:
+    transaction-data:
+      amount: 1000
+      type: P2P
+      currency: USD
+      merchant-id: 55a78372-9852-440d-9da9-61dedd572464
+      sender-name: Hilton
+      sender-token: string
+      receiver-name: string
+      receiver-token: string

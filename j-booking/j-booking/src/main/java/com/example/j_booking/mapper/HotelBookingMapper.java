@@ -1,6 +1,10 @@
 package com.example.j_booking.mapper;
 
+import com.example.j_booking.configuration.TransactionDataProperties;
+import com.example.j_booking.constants.Currency;
+import com.example.j_booking.constants.TransactionType;
 import com.example.j_booking.dto.BookingRecordDto;
+import com.example.j_booking.dto.PaymentDto;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.request.PaymentRequest;
@@ -18,10 +22,12 @@ import com.example.j_booking.utils.Paginator;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HotelBookingMapper {
@@ -42,8 +48,17 @@ public interface HotelBookingMapper {
 
     List<BookingRecordDto> toBookingRecordDtoList(List<BookingRecord> hotels);
     BookingRecordDto toDto(BookingRecord record);
-//    BookingRecord toBookingRecord(BookingRecordDto dto);
-//    BookingRecord toBookingRecord(PaymentRequest request);
+
+    @Mapping(target = "referenceId", source = "paymentDto.paymentId")
+    @Mapping(target = "amount", expression = "java(transactionDataProperties.getAmount())")
+    @Mapping(target = "type", expression = "java(transactionDataProperties.getType())")
+    @Mapping(target = "currency", expression = "java(transactionDataProperties.getCurrency())")
+    @Mapping(target = "merchantId", expression = "java(transactionDataProperties.getMerchantId())")
+    @Mapping(target = "senderName", expression = "java(transactionDataProperties.getSenderName())")
+    @Mapping(target = "senderToken", expression = "java(transactionDataProperties.getSenderToken())")
+    @Mapping(target = "receiverName", expression = "java(transactionDataProperties.getReceiverName())")
+    @Mapping(target = "receiverToken", expression = "java(transactionDataProperties.getReceiverToken())")
+    PaymentRequest toPaymentRequest(PaymentDto paymentDto, TransactionDataProperties transactionDataProperties);
 
     @Mapping(target = "pageNumber", source = "page")
     @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")
@@ -85,6 +100,4 @@ public interface HotelBookingMapper {
             toBookingRecordDtoList(page.getContent())
         );
     }
-
-//    default
 }
