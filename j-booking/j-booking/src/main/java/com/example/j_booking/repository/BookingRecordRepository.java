@@ -20,4 +20,6 @@ public interface BookingRecordRepository extends JpaRepository<BookingRecord, Lo
     boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
 
     Page<BookingRecord> getBookingRecordsByClientId(Long clientId, Pageable pageable);
+
+//    BookingRecord confirmBooking(BookingRecord bookingRecord);
 }

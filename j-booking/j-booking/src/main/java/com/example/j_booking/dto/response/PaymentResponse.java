@@ -13,5 +13,4 @@ public record PaymentResponse(
         Long amount,
         Currency currency,
         LocalDateTime createdAt
-) {
-}
+) {}

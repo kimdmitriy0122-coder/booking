@@ -3,6 +3,7 @@ package com.example.j_booking.mapper;
 import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
+import com.example.j_booking.dto.request.PaymentRequest;
 import com.example.j_booking.dto.response.BookingRecordListResponse;
 import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
@@ -41,6 +42,8 @@ public interface HotelBookingMapper {
 
     List<BookingRecordDto> toBookingRecordDtoList(List<BookingRecord> hotels);
     BookingRecordDto toDto(BookingRecord record);
+//    BookingRecord toBookingRecord(BookingRecordDto dto);
+//    BookingRecord toBookingRecord(PaymentRequest request);
 
     @Mapping(target = "pageNumber", source = "page")
     @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")
@@ -78,13 +81,10 @@ public interface HotelBookingMapper {
     }
 
     default BookingRecordListResponse<BookingRecordDto> toBookingRecordListResponse(Page<BookingRecord> page) {
-//        return BookingRecordListResponse
-//            .builder()
-//            .bookingRecordDtoList(toBookingRecordDtoList(page.getContent()))
-//            .build();
-        System.out.println(page.getContent() + "888");
         return new BookingRecordListResponse<>(
             toBookingRecordDtoList(page.getContent())
         );
     }
+
+//    default
 }

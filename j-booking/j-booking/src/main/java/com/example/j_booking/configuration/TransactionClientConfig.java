@@ -3,6 +3,7 @@ package com.example.j_booking.configuration;
 import com.example.j_booking.handler.TransactionClientHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
 import org.springframework.boot.http.client.HttpClientSettings;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import java.time.Duration;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "app.services.merchant-api")
 public class TransactionClientConfig {
     String url;
