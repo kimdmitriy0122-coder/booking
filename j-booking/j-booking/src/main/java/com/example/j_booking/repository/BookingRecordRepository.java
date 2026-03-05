@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BookingRecordRepository extends JpaRepository<BookingRecord, Long> {
@@ -20,6 +21,8 @@ public interface BookingRecordRepository extends JpaRepository<BookingRecord, Lo
     boolean isRoomFreeByDates(@Param("rec") BookingRecord record);
 
     Page<BookingRecord> getBookingRecordsByClientId(Long clientId, Pageable pageable);
+
+    BookingRecord getBookingRecordByPaymentId(UUID paymentId);
 
 //    BookingRecord confirmBooking(BookingRecord bookingRecord);
 }

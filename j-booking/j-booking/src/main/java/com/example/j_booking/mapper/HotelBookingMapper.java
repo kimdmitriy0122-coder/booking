@@ -1,7 +1,9 @@
 package com.example.j_booking.mapper;
 
 import com.example.j_booking.configuration.TransactionDataProperties;
+import com.example.j_booking.constants.BookingStatus;
 import com.example.j_booking.constants.Currency;
+import com.example.j_booking.constants.TransactionStatus;
 import com.example.j_booking.constants.TransactionType;
 import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.PaymentDto;
@@ -14,6 +16,7 @@ import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
 import com.example.j_booking.dto.request.PageableRequestWithDates;
 import com.example.j_booking.dto.RoomDto;
+import com.example.j_booking.dto.response.PaymentResponse;
 import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
@@ -26,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,6 +63,33 @@ public interface HotelBookingMapper {
     @Mapping(target = "receiverName", expression = "java(transactionDataProperties.getReceiverName())")
     @Mapping(target = "receiverToken", expression = "java(transactionDataProperties.getReceiverToken())")
     PaymentRequest toPaymentRequest(PaymentDto paymentDto, TransactionDataProperties transactionDataProperties);
+
+
+    default BookingRecord toBookingRecord(PaymentResponse paymentResponse, BookingRecord record){
+        record.setStatus(
+            switch (paymentResponse.status()){
+                case CREATED,
+                     SENDER_INFO_VALIDATED,
+                     RECEIVER_INFO_VALIDATED,
+                     AMOUNT_VALIDATED,
+                     SENT_TO_CORE_LEDGER -> BookingStatus.PROCESSING;
+
+                case COMPLETED -> BookingStatus.PAYED;
+
+                case CALCULATE_FAILED,
+                     RECEIVER_INFO_VALIDATION_FAILED,
+                     AMOUNT_VALIDATION_FAILED,
+                     SENDER_INFO_VALIDATION_FAILED,
+                     FAILED -> BookingStatus.PROCESSING_FAILED;
+            });
+        return record;
+    }
+//    UUID id,
+//    UUID referenceId,
+//    TransactionStatus status,
+//    Long amount,
+//    Currency currency,
+//    LocalDateTime createdAt
 
     @Mapping(target = "pageNumber", source = "page")
     @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")

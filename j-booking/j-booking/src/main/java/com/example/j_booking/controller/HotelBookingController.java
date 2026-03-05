@@ -50,7 +50,7 @@ public class HotelBookingController {
     }
 
     @PostMapping("/confirm-booking-record")
-    public ResponseEntity<BookingRecordDto> confirmBooking(PaymentDto dto){
+    public ResponseEntity<BookingRecordDto> confirmBooking(@RequestBody @Valid PaymentDto dto){
         return ResponseEntity
             .accepted()
             .body(service.confirmBooking(dto));

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record PaymentResponse(
         UUID id,
-        Long referenceId,
+        UUID referenceId,
         TransactionStatus status,
         Long amount,
         Currency currency,

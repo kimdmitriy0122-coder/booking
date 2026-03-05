@@ -17,10 +17,16 @@ public class SaverBookingServiceImpl implements SaverBookingService {
     BookingRecordRepository bookingRecordRepository;
 
     @Override
-    @Transactional()
+    @Transactional
     public BookingRecord saveBookingRecord(BookingRecord record, BookingStatus status){
         BookingRecord result = bookingRecordRepository.save(record);
         result.setStatus(status);
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(BookingRecord record){
+        bookingRecordRepository.save(record);
     }
 }

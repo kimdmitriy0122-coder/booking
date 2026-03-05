@@ -1,7 +1,11 @@
 package com.example.j_booking.configuration;
 
 import com.example.j_booking.handler.TransactionClientHandler;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
@@ -17,6 +21,9 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "app.services.merchant-api")
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class TransactionClientConfig {
     String url;
     @Bean

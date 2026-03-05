@@ -39,7 +39,7 @@ public class BookingRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "payment_id")
+    @Column(name = "payment_id", unique = true)
     UUID paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
