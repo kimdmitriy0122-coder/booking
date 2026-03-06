@@ -32,11 +32,19 @@ app:
   transaction-data:
     amount: 1000
     type: P2P
-    currency: USD
+    currency: UZS
     merchant-id: 55a78372-9852-440d-9da9-61dedd572464
     sender-name: Hilton
     sender-token: string
     receiver-name: string
     receiver-token: string
+    companyName: Hilton
+    inn: string
+    login: string
+    merchant-status: ACTIVE
+    first-account-id: 2d759e8e-64db-497a-ad49-9de238512ef6
+    first-account-number: 11111111
+    second-account-id: ee7d798f-9683-4f16-a40f-b808921aa58c
+    second-account-number: 2222222
   transaction-api:
     url: "http://217.29.121.129/bank_api/api/v1/transactions"

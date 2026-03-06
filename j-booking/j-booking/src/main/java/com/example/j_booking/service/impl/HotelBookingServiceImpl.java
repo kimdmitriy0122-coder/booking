@@ -23,6 +23,7 @@ import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
+import com.example.j_booking.exceptions.BookingRecordWithSuchPaymentIdNotExist;
 import com.example.j_booking.exceptions.NoSuchRoomException;
 import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
@@ -52,6 +53,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     TransactionService transactionService;
     TransactionDataProperties transactionDataProperties;
     TransactionApiProperties transactionApiProperties;
+    WebhookService webhookService;
 
     @Override
     @Cacheable(value = "rooms", key = "#id")
@@ -140,19 +142,24 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     @Override
     public BookingRecordDto confirmBooking(PaymentDto dto){
+        BookingRecord record = bookingRecordRepository.getBookingRecordByPaymentId(dto.paymentId());
+        if(record == null)
+            throw new BookingRecordWithSuchPaymentIdNotExist("no booking record with such payment id");
         PaymentRequest paymentRequest = mapper.toPaymentRequest(dto, transactionDataProperties);
 
         PaymentResponse paymentResponse = transactionService.sendPayment(paymentRequest, transactionApiProperties);
+        System.out.println(paymentResponse);
+
+        webhookService.simulateWebhook(paymentRequest);
 
         BookingRecord bookingRecord = mapper.toBookingRecord(
             paymentResponse,
-            bookingRecordRepository.getBookingRecordByPaymentId(dto.paymentId())
+            record
             );
 
         saverBookingService.updateStatus(bookingRecord);
 
         return mapper.toDto(bookingRecord);
-//        return null;
     }
 
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {

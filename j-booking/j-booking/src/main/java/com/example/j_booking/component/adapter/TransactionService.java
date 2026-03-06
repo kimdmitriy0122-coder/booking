@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +19,6 @@ public class TransactionService {
     RestClient restClient;
 
     public PaymentResponse sendPayment(PaymentRequest request, TransactionApiProperties transactionApiProperties){
-//        System.out.println(request);
         return restClient
             .post()
             .uri(transactionApiProperties.getUrl())
@@ -26,4 +27,13 @@ public class TransactionService {
             .body(PaymentResponse.class);
 
     }
+
+//    public PaymentResponse getStatus(UUID referenceId, TransactionApiProperties props) {
+//
+//        return restClient
+//            .get()
+//            .uri(props.getStatusUrl() + "/" + referenceId)
+//            .retrieve()
+//            .body(PaymentResponse.class);
+//    }
 }

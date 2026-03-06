@@ -11,7 +11,6 @@ import com.example.j_booking.dto.response.HotelBookingResponse;
 import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.response.HotelListResponse;
 import com.example.j_booking.dto.RoomDto;
-import com.example.j_booking.dto.response.PaymentResponse;
 import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.service.HotelBookingService;
 import jakarta.validation.Valid;
