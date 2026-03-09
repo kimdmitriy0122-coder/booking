@@ -60,7 +60,6 @@ class HotelBookingControllerTest {
         record1 = BookingRecord
                 .builder()
                 .room(room)
-//                .id(TestConstants.ID)
                 .id(1L)
                 .checkIn(LocalDate.of(2026, 1, 10))
                 .checkOut(LocalDate.of(2026, 1, 11))
@@ -68,19 +67,21 @@ class HotelBookingControllerTest {
                 .created(LocalDateTime.now())
                 .build();
 
-        request = new HotelBookingRequest(
-                1L,
-                LocalDate.of(2026, 1, 10),
-                LocalDate.of(2026, 1, 11)
-        );
+        request = HotelBookingRequest
+                .builder()
+                .roomId(1L)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .build();
 
-        requiredResponse = new HotelBookingResponse(
-                room,
-                LocalDate.of(2026, 1, 10),
-                LocalDate.of(2026, 1, 11),
-                BookingStatus.BOOKED,
-                "can't book room because it's already booked"
-        );
+        requiredResponse = HotelBookingResponse
+                .builder()
+                .room(room)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .status(BookingStatus.BOOKED)
+                .message("can't book room because it's already booked")
+                .build();
     }
 
     @Test
