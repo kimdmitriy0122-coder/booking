@@ -12,5 +12,4 @@ public record RoomListResponse<RoomDto>(
     int size,
     long totalElements,
     int totalPages
-) implements Serializable {
-}
+) implements Serializable {}

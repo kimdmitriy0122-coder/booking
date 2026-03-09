@@ -25,20 +25,17 @@ import com.example.j_booking.utils.Paginator;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HotelBookingMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "room", ignore = true)
-    @Mapping(target = "paymentId", ignore = true)
+    @Mapping(target = "paymentId", expression = "java(UUID.randomUUID())")
     BookingRecord toBookingRecord(HotelBookingRequest dto);
 
     @Mapping(target = "message", source = "message")
@@ -84,12 +81,6 @@ public interface HotelBookingMapper {
             });
         return record;
     }
-//    UUID id,
-//    UUID referenceId,
-//    TransactionStatus status,
-//    Long amount,
-//    Currency currency,
-//    LocalDateTime createdAt
 
     @Mapping(target = "pageNumber", source = "page")
     @Mapping(target = "pageSize", expression = "java(Math.min(request.size(), Paginator.MAX_PAGE_SIZE))")

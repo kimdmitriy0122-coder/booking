@@ -4,8 +4,6 @@ import com.example.j_booking.component.adapter.TransactionService;
 import com.example.j_booking.configuration.TransactionApiProperties;
 import com.example.j_booking.configuration.TransactionDataProperties;
 import com.example.j_booking.constants.BookingStatus;
-import com.example.j_booking.constants.Currency;
-import com.example.j_booking.constants.TransactionType;
 import com.example.j_booking.dto.BookingRecordDto;
 import com.example.j_booking.dto.PaymentDto;
 import com.example.j_booking.dto.request.BookingRecordListRequest;
@@ -23,7 +21,8 @@ import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.BookingRecord;
 import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
-import com.example.j_booking.exceptions.BookingRecordWithSuchPaymentIdNotExist;
+import com.example.j_booking.exceptions.BookingAlreadyPayedException;
+import com.example.j_booking.exceptions.BookingRecordWithSuchPaymentIdNotExistException;
 import com.example.j_booking.exceptions.NoSuchRoomException;
 import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
@@ -38,8 +37,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -100,7 +97,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     @Transactional(readOnly = true)
     @Cacheable(
         value = "availableRooms",
-        key = "'page=' + #page + ':size=' + #size"
+            key = "'page=' + #request.page + ':size=' + #request.size + ':checkIn=' + #request.checkIn + ':checkOut=' + #request.checkOut"
     )
     public RoomListResponse<RoomDto> getAvailableRoomList(PageableRequestWithDates request) {
         Page<Room> rooms = roomRepository
@@ -115,7 +112,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     @Transactional(readOnly = true)
     @Cacheable(
         value = "availableHotels",
-        key = "'page=' + #page + ':size=' + #size"
+            key = "'page=' + #request.page + ':size=' + #request.size + ':checkIn=' + #request.checkIn + ':checkOut=' + #request.checkOut"
     )
     public HotelListResponse<HotelDto> getAvailableHotelList(PageableRequestWithDates request) {
         Page<Hotel> hotels = hotelRepository
@@ -130,7 +127,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     @Transactional(readOnly = true)
     @Cacheable(
         value = "clientHistory",
-        key = "'page=' + #page + ':size=' + #size"
+            key = "'page=' + #request.page + ':size=' + #request.size + ':checkIn=' + #request.checkIn + ':checkOut=' + #request.checkOut"
     )
     public BookingRecordListResponse<BookingRecordDto> getBookingRecordList(BookingRecordListRequest bookingRecordListRequest, PageableRequest pageableRequest) {
         Page<BookingRecord> records = bookingRecordRepository
@@ -144,7 +141,9 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     public BookingRecordDto confirmBooking(PaymentDto dto){
         BookingRecord record = bookingRecordRepository.getBookingRecordByPaymentId(dto.paymentId());
         if(record == null)
-            throw new BookingRecordWithSuchPaymentIdNotExist("no booking record with such payment id");
+            throw new BookingRecordWithSuchPaymentIdNotExistException("no booking record with such payment id");
+        if(record.getStatus() == BookingStatus.PAYED)
+            throw new BookingAlreadyPayedException();
         PaymentRequest paymentRequest = mapper.toPaymentRequest(dto, transactionDataProperties);
 
         PaymentResponse paymentResponse = transactionService.sendPayment(paymentRequest, transactionApiProperties);
