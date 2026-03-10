@@ -1,6 +1,7 @@
 package com.example.j_booking.dto.request;
 
 import com.example.j_booking.validation.annotations.HotelBookingRequestValidationAnnotation;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -15,8 +16,10 @@ public record HotelBookingRequest(
     Long roomId,
 
     @NotNull(message = "checkIn must not be empty")
+    @Future
     LocalDate checkIn,
 
     @NotNull(message = "checkOut must not be empty")
+    @Future
     LocalDate checkOut
 ) {}

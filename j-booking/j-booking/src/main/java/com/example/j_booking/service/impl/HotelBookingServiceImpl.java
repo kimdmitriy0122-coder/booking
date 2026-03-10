@@ -29,6 +29,7 @@ import com.example.j_booking.repository.BookingRecordRepository;
 import com.example.j_booking.repository.HotelRepository;
 import com.example.j_booking.repository.RoomRepository;
 import com.example.j_booking.service.HotelBookingService;
+import com.example.j_booking.service.RoomService;
 import com.example.j_booking.service.SaverBookingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,17 +49,12 @@ public class HotelBookingServiceImpl implements HotelBookingService {
     HotelBookingMapper mapper;
     SaverBookingService saverBookingService;
     TransactionService transactionService;
+    RoomService roomService;
     TransactionDataProperties transactionDataProperties;
     TransactionApiProperties transactionApiProperties;
     WebhookService webhookService;
 
-    @Override
-    @Cacheable(value = "rooms", key = "#id")
-    public Room getRoomById(Long id) {
-        return roomRepository
-            .findById(id)
-            .orElseThrow(() -> new NoSuchRoomException("No room found with id: " + id));
-    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -163,7 +159,7 @@ public class HotelBookingServiceImpl implements HotelBookingService {
 
     public BookingRecord getBookingRecordByRequest(HotelBookingRequest request) {
         BookingRecord record = mapper.toBookingRecord(request);
-        record.setRoom(getRoomById(request.roomId()));
+        record.setRoom(roomService.getRoomById(request.roomId()));
         return record;
     }
 

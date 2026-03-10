@@ -10,17 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.UUID;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "address", schema = "booking")
 @Getter
 @Setter
 @NoArgsConstructor
+@SuperBuilder
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

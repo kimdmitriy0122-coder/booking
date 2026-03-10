@@ -1,19 +1,24 @@
 package com.example.j_booking.controller;
 
-import com.example.j_booking.constants.BookingStatus;
-import com.example.j_booking.constants.RoomCapacity;
-import com.example.j_booking.constants.RoomClass;
+import com.example.j_booking.constants.*;
+import com.example.j_booking.dto.HotelDto;
 import com.example.j_booking.dto.RoomDto;
 import com.example.j_booking.dto.request.HotelBookingRequest;
 import com.example.j_booking.dto.request.PageableRequest;
 import com.example.j_booking.dto.request.PageableRequestWithDates;
 import com.example.j_booking.dto.response.HotelBookingResponse;
+import com.example.j_booking.dto.response.HotelListResponse;
 import com.example.j_booking.dto.response.RoomListResponse;
+import com.example.j_booking.entity.Address;
 import com.example.j_booking.entity.BookingRecord;
+import com.example.j_booking.entity.Hotel;
 import com.example.j_booking.entity.Room;
 import com.example.j_booking.mapper.HotelBookingMapper;
 import com.example.j_booking.repository.BookingRecordRepository;
+import com.example.j_booking.repository.HotelRepository;
 import com.example.j_booking.repository.RoomRepository;
+import com.example.j_booking.service.RoomService;
+import com.example.j_booking.service.SaverBookingService;
 import com.example.j_booking.service.impl.HotelBookingServiceImpl;
 
 import com.example.j_booking.utils.Paginator;
@@ -45,21 +50,34 @@ class HotelBookingControllerTest {
     @Mock
     RoomRepository roomRepository;
     @Mock
+    HotelRepository hotelRepository;
+    @Mock
     HotelBookingMapper hotelBookingMapper;
+    @Mock
+    RoomService roomService;
+    @Mock
+    SaverBookingService saverBookingService;
 
     @InjectMocks
     HotelBookingServiceImpl hotelBookingService;
 
     Room room1, room2, room3, room4;
     RoomDto roomDto1, roomDto2, roomDto3, roomDto4;
-    BookingRecord record1;
-    HotelBookingRequest request;
-    HotelBookingResponse requiredResponse;
+    Hotel hotel1, hotel2, hotel3, hotel4;
+    HotelDto hotelDto1, hotelDto2, hotelDto3, hotelDto4;
+    BookingRecord recordBooked, recordFree, recordFreeAfterProcessing;
+    HotelBookingRequest request, request4;
+    HotelBookingResponse requiredResponseFailed;
+    HotelBookingResponse requiredResponseSuccess;
     PageableRequest pageableRequest;
     PageableRequestWithDates pageableRequestWithDates;
     Page<RoomDto> roomDtoPage;
     Page<Room> roomPage;
+    Page<Hotel> hotelPage;
+    Page<HotelDto> hotelDtoPage;
     RoomListResponse roomListResponse;
+    HotelListResponse hotelListResponse;
+    Address address;
 
     @BeforeEach
     void setUp() {
@@ -97,7 +115,6 @@ class HotelBookingControllerTest {
         ;
         roomDto1 = RoomDto
             .builder()
-            .id(1L)
             .hotelId(1L)
             .roomCapacity(RoomCapacity.DOUBLE)
             .roomClass(RoomClass.STANDARD)
@@ -105,7 +122,6 @@ class HotelBookingControllerTest {
 
         roomDto2 = RoomDto
             .builder()
-            .id(2L)
             .hotelId(1L)
             .roomCapacity(RoomCapacity.DOUBLE)
             .roomClass(RoomClass.LUX)
@@ -113,7 +129,6 @@ class HotelBookingControllerTest {
 
         roomDto3 = RoomDto
             .builder()
-            .id(3L)
             .hotelId(1L)
             .roomCapacity(RoomCapacity.DOUBLE)
             .roomClass(RoomClass.PRESIDENT_LUX)
@@ -121,16 +136,32 @@ class HotelBookingControllerTest {
 
         roomDto4 = RoomDto
             .builder()
-            .id(4L)
             .hotelId(1L)
             .roomCapacity(RoomCapacity.DOUBLE)
             .roomClass(RoomClass.SUPERIOR)
             .build();
 
-        record1 = BookingRecord
+        recordBooked = BookingRecord
                 .builder()
                 .room(room1)
-                .id(1L)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .status(BookingStatus.BOOKED)
+                .created(LocalDateTime.now())
+                .build();
+
+        recordFree = BookingRecord
+                .builder()
+                .room(room4)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .status(BookingStatus.FREE)
+                .created(LocalDateTime.now())
+                .build();
+
+        recordFreeAfterProcessing = BookingRecord
+                .builder()
+                .room(room4)
                 .checkIn(LocalDate.of(2026, 1, 10))
                 .checkOut(LocalDate.of(2026, 1, 11))
                 .status(BookingStatus.BOOKED)
@@ -144,13 +175,29 @@ class HotelBookingControllerTest {
                 .checkOut(LocalDate.of(2026, 1, 11))
                 .build();
 
-        requiredResponse = HotelBookingResponse
+        request4 = HotelBookingRequest
+                .builder()
+                .roomId(4L)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .build();
+
+        requiredResponseFailed = HotelBookingResponse
                 .builder()
                 .room(room1)
                 .checkIn(LocalDate.of(2026, 1, 10))
                 .checkOut(LocalDate.of(2026, 1, 11))
                 .status(BookingStatus.BOOKED)
                 .message("can't book room because it's already booked")
+                .build();
+
+        requiredResponseSuccess = HotelBookingResponse
+                .builder()
+                .room(room1)
+                .checkIn(LocalDate.of(2026, 1, 10))
+                .checkOut(LocalDate.of(2026, 1, 11))
+                .status(BookingStatus.FREE)
+                .message("room booked")
                 .build();
 
         pageableRequest = PageableRequest
@@ -171,6 +218,43 @@ class HotelBookingControllerTest {
 
         roomPage = new PageImpl<>(List.of(room1, room2, room3, room4));
 
+        address = Address
+                .builder()
+                .city(City.BERLIN)
+                .buildingNumber("1E")
+                .street("Strasse 21")
+                .country(Country.GERMANY)
+                .build();
+
+        hotel1 = Hotel
+                .builder()
+                .rooms(List.of(room1, room2, room3, room4))
+                .name("Astoris")
+                .address(address)
+                .buildingType(BuildingType.APARTMENT)
+                .rating((short) 3)
+                .build();
+
+        hotelDto1 = HotelDto
+                .builder()
+                .name("Astoris")
+                .address(address)
+                .buildingType(BuildingType.APARTMENT)
+                .rating((short) 3)
+                .build();
+
+
+        hotelPage = new PageImpl<>(List.of(hotel1));
+
+        hotelDtoPage = new PageImpl<>(List.of(hotelDto1));
+
+        hotelListResponse = HotelListResponse
+                .<HotelDto>builder()
+                .content(hotelDtoPage.toList())
+                .page(0)
+                .size(5)
+                .build();
+
         roomListResponse = RoomListResponse
             .<RoomDto>builder()
             .content(roomDtoPage.toList())
@@ -186,13 +270,13 @@ class HotelBookingControllerTest {
     @DisplayName("checking availability when room already booked")
     void getRoomAvailability() {
 
-        when(hotelBookingMapper.toBookingRecord(request)).thenReturn(record1);
-        when(roomRepository.findById(room1.getId())).thenReturn(Optional.of(room1));
-        when(hotelBookingService.checkRoomAvailabilityWithDates(request)).thenReturn(requiredResponse);
+        when(hotelBookingMapper.toBookingRecord(request)).thenReturn(recordBooked);
+//        when(roomRepository.findById(room1.getId())).thenReturn(Optional.of(room1));
+        when(hotelBookingService.checkRoomAvailabilityWithDates(request)).thenReturn(requiredResponseFailed);
 
         HotelBookingResponse actualResponse = hotelBookingService.checkRoomAvailabilityWithDates(request);
 
-        assertThat(actualResponse).isEqualTo(requiredResponse);
+        assertThat(actualResponse).isEqualTo(requiredResponseFailed);
     }
 
     @Test
@@ -216,10 +300,57 @@ class HotelBookingControllerTest {
     }
 
     @Test
-    void bookRoomWithDates() {
+    void bookRoomWithDatesFailed() {
+        when(hotelBookingMapper.toBookingRecord(request))
+                .thenReturn(recordBooked);
+        when(roomService.getRoomById(1L))
+                .thenReturn(room1);
+        when(bookingRecordRepository.isRoomFreeByDates(recordBooked))
+                .thenReturn(true);
+        when(hotelBookingMapper.toHotelBookingResponse(recordBooked,"can't book room because it's already booked")).thenReturn(requiredResponseFailed);
+
+        HotelBookingResponse actualResponseFailed = hotelBookingService.bookHotelRoomByRequest(request);
+
+        assertThat(actualResponseFailed).isEqualTo(requiredResponseFailed);
+    }
+
+    @Test
+    void bookRoomWithDatesSuccess() {
+        when(hotelBookingMapper.toBookingRecord(request4))
+                .thenReturn(recordFree);
+        when(roomService.getRoomById(4L))
+                .thenReturn(room4);
+        when(bookingRecordRepository.isRoomFreeByDates(recordFree))
+                .thenReturn(false);
+        when(saverBookingService.saveBookingRecord(recordFree, BookingStatus.BOOKED))
+                .thenAnswer(invocation -> {
+                    BookingRecord record = invocation.getArgument(0);
+                    BookingStatus status = invocation.getArgument(1);
+
+                    record.setStatus(status);
+                    return record;
+                });
+        when(hotelBookingMapper.toHotelBookingResponse(recordFree,"room booked"))
+                .thenReturn(requiredResponseSuccess);
+
+        HotelBookingResponse actualResponseSuccess = hotelBookingService.bookHotelRoomByRequest(request4);
+
+        assertThat(actualResponseSuccess).isEqualTo(requiredResponseSuccess);
     }
 
     @Test
     void getAvailableHotelList() {
+        when(hotelRepository.findAvailableHotels(
+                pageableRequestWithDates.checkIn(),
+                pageableRequestWithDates.checkOut(),
+                hotelBookingMapper.toPageRequest(pageableRequestWithDates)))
+                .thenReturn(hotelPage);
+
+        when(hotelBookingMapper.toHotelListResponse(hotelPage))
+                .thenReturn(hotelListResponse);
+
+        HotelListResponse<HotelDto> actualResponse = hotelBookingService.getAvailableHotelList(pageableRequestWithDates);
+
+        assertThat(actualResponse).isEqualTo(hotelListResponse);
     }
 }

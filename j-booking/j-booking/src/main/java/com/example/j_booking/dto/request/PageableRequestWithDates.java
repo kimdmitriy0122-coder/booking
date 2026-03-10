@@ -1,6 +1,7 @@
 package com.example.j_booking.dto.request;
 
 import com.example.j_booking.validation.annotations.PageableRequestValidationAnnotation;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -16,8 +17,10 @@ public record PageableRequestWithDates(
     @NotNull(message = "size must not be empty")
     @PositiveOrZero(message = "size must be positive or zero")
     int size,
+    @Future
     @NotNull(message = "checkIn must not be empty")
     LocalDate checkIn,
+    @Future
     @NotNull(message = "checkOut must not be empty")
     LocalDate checkOut
 ) {}

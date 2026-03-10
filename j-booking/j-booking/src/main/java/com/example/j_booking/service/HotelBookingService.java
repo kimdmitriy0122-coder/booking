@@ -16,13 +16,7 @@ import com.example.j_booking.dto.response.RoomListResponse;
 import com.example.j_booking.entity.Room;
 
 public interface HotelBookingService {
-    Room getRoomById(Long id);
-//    BookingRecord getBookingRecordByRequest(HotelBookingRequest request);
-//    HotelBookingResponse bookHotelRoomByRecord(BookingRecord record);
     HotelBookingResponse checkRoomAvailabilityWithDates(HotelBookingRequest request);
-//    HotelBookingResponse checkRoomAvailability(HotelBookingRequest request);
-//    BookingStatus checkStatusByRecord(BookingRecord record);
-//    Page<Room> getAvailableRoomList(PageableRequestWithDates request);
     RoomListResponse<RoomDto> getAvailableRoomList(PageableRequestWithDates request);
     HotelListResponse<HotelDto> getAvailableHotelList(PageableRequestWithDates request);
     HotelBookingResponse bookHotelRoomByRequest(HotelBookingRequest request);
