@@ -6,11 +6,10 @@ import java.io.Serializable;
 import java.util.List;
 
 @Builder
-public record HotelListResponse<HotelDto>(
-    List<HotelDto> content,
+public record HotelListResponse<T>(
+    List<T> content,
     int page,
     int size,
     long totalElements,
     int totalPages
-) implements Serializable {
-}
+) implements Serializable {}

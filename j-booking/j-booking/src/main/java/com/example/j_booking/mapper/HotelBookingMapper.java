@@ -98,28 +98,32 @@ public interface HotelBookingMapper {
 
 
     default RoomListResponse<RoomDto> toRoomListResponse(Page<Room> page) {
-        return new RoomListResponse<>(
-            toRoomDtoList(page.getContent()),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages()
-        );
+        return RoomListResponse
+            .<RoomDto>builder()
+            .content(toRoomDtoList(page.getContent()))
+            .page(page.getNumber())
+            .size(page.getSize())
+            .totalElements(page.getTotalElements())
+            .totalPages(page.getTotalPages())
+            .build()
+            ;
     }
 
     default HotelListResponse<HotelDto> toHotelListResponse(Page<Hotel> page) {
-        return new HotelListResponse<>(
-            toHotelDtoList(page.getContent()),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages()
-        );
+        return HotelListResponse
+            .<HotelDto>builder()
+            .content(toHotelDtoList(page.getContent()))
+            .page(page.getNumber())
+            .size(page.getSize())
+            .totalElements(page.getTotalElements())
+            .totalPages(page.getTotalPages())
+            .build();
     }
 
     default BookingRecordListResponse<BookingRecordDto> toBookingRecordListResponse(Page<BookingRecord> page) {
-        return new BookingRecordListResponse<>(
-            toBookingRecordDtoList(page.getContent())
-        );
+        return BookingRecordListResponse
+            .<BookingRecordDto>builder()
+            .bookingRecordDtoList(toBookingRecordDtoList(page.getContent()))
+            .build();
     }
 }

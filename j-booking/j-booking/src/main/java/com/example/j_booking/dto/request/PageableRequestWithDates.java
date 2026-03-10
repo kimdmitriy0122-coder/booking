@@ -3,9 +3,11 @@ package com.example.j_booking.dto.request;
 import com.example.j_booking.validation.annotations.PageableRequestValidationAnnotation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 @PageableRequestValidationAnnotation
 public record PageableRequestWithDates(
     @NotNull(message = "page must not be empty")

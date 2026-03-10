@@ -6,6 +6,6 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record BookingRecordListResponse<BookingRecordDto>(
-    List<BookingRecordDto> bookingRecordDtoList
+public record BookingRecordListResponse<T>(
+    List<T> bookingRecordDtoList
 ) {}
